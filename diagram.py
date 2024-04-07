@@ -22,7 +22,7 @@ def to_number(s):
     return float(s)
 
 def to_string(n):
-    if type(n) == int:
+    if n == int(n):
         return '%d' % n
     return '%f' % n
 
@@ -61,6 +61,8 @@ def make_object(s):
         return None
     elif t0 == 'rect':
         return make_rect(parsed)
+    elif t0 == 'rrect':
+        return make_rounded_rect(parsed)
     else:
         return None
 
@@ -71,10 +73,27 @@ def get_ul(r):
     s = r['size']
     return (c[0]-s[0]/2.0, c[1]-s[1]/2.0)
 
+def get_color_for_type(t):
+    if (t + '_color') in context:
+        return context[t + '_color']
+    return context['color']
+
+def get_color(r):
+    if 'color' in r:
+        return r['color']
+    return get_color_for_type('node')
+
 def make_rect(r):
     ul = get_ul(r)
     s = r['size']
-    return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 0, 0, context['color'])
+    color = get_color(r)
+    return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 0, 0, color)
+
+def make_rounded_rect(r):
+    ul = get_ul(r)
+    s = r['size']
+    color = get_color(r)
+    return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 10, 10, color)
 
 def main(args):
     # for now, just ignore the args and use our hard-coded input:
