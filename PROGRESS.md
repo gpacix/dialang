@@ -106,3 +106,13 @@ rect A "Starting_Point" center 100 100 size 100 50 text-color white
 rrect B "Ending_Point" ul 300 300 size 100 150 color green
 edge E from A.lr to B color yellow
 [17:13:19 gpaci@mac drawing-language]$
+
+[17:20:47 gpaci@mac drawing-language]$ python diagram.py < input.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" /><text x="50" y="106" textLength="95" lengthAdjust="spacingAndGlyphs" fill="white">"Starting_Point"</text>
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" /><text x="300" y="381" textLength="95" lengthAdjust="spacingAndGlyphs" fill="black">"Ending_Point"</text>
+<rect x="250" y="85" width="100" height="70" rx="35.0" ry="35.0" fill="#0080FF" /><text x="250" y="126" textLength="95" lengthAdjust="spacingAndGlyphs" fill="black">Oval</text>
+</svg>
+[17:21:27 gpaci@mac drawing-language]$
+

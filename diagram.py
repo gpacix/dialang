@@ -70,6 +70,8 @@ def make_object(parsed):
         return make_rect(parsed)
     elif kind == 'rrect':
         return make_rounded_rect(parsed)
+    elif kind == 'oval':
+        return make_oval(parsed)
     elif kind == 'edge':
         return make_edge(parsed)
     elif kind == 'diagram':
@@ -135,6 +137,11 @@ def make_rect(r):
 
 def make_rounded_rect(r):
     return make_either_rect(r, 10, 10)
+
+def make_oval(r):
+    s = r['size']
+    m = min(s[0], s[1])/2.0
+    return make_either_rect(r, m, m)
 
 def split_at_last(s, d):
     if d in s:
