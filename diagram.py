@@ -10,7 +10,9 @@ RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="
 
 LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
 
-TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" lengthAdjust="spacingAndGlyphs" fill="%s">%s</text>'
+TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" fill="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+
+CIRCLE_TEMPLATE = '<circle cx="%s" cy="%s" r="%s" fill="%s" />'
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750, 'font_half_height': 6, }
@@ -53,7 +55,7 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height']:
+        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius']:
             r[current_token] = tokens[i+1]
             i += 2
         else:
@@ -66,14 +68,16 @@ def make_object(parsed):
     if kind == 'color':
         context['color'] = parsed['id']
         return None
+    elif kind == 'edge':
+        return make_edge(parsed)
     elif kind == 'rect':
         return make_rect(parsed)
     elif kind == 'rrect':
         return make_rounded_rect(parsed)
     elif kind == 'oval':
         return make_oval(parsed)
-    elif kind == 'edge':
-        return make_edge(parsed)
+    elif kind == 'circle':
+        return make_circle(parsed)
     elif kind == 'diagram':
         return make_diagram(parsed)
     else:
@@ -118,19 +122,21 @@ def get_label(item):
     return item['id']
 
 def make_either_rect(r, rx, ry):
+    label = get_label(r)
+    color = get_color(r)
+    textcolor = get_text_color(r)
     ul = get_ul(r)
     x = to_string(ul[0])
     y = to_string(ul[1])
-    label = get_label(r)
     s = r['size']
     width = to_string(s[0])
     height = to_string(s[1])
     textwidth = to_string(s[0]*.95)
-    texty = to_string(ul[1] + s[1]/2.0 + context['font_half_height'])
-    color = get_color(r)
-    textcolor = get_text_color(r)
+    c = get_center(r)
+    textx = to_string(c[0])
+    texty = to_string(c[1] + context['font_half_height'])
     return (RECT_TEMPLATE % (x, y, width, height, rx, ry, color)
-            + TEXT_TEMPLATE % (x, texty, textwidth, textcolor, label))
+            + TEXT_TEMPLATE % (textx, texty, textwidth, textcolor, label))
 
 def make_rect(r):
     return make_either_rect(r, 0, 0)
@@ -142,6 +148,18 @@ def make_oval(r):
     s = r['size']
     m = min(s[0], s[1])/2.0
     return make_either_rect(r, m, m)
+
+def make_circle(item):
+    r = to_number(item['radius'])
+    textwidth = to_string(2*r*.95)
+    r = to_string(r)
+    c = item['center']
+    x, y = to_string(c[0]), to_string(c[1])
+    label = get_label(item)
+    color = get_color(item)
+    textcolor = get_text_color(item)
+    return (CIRCLE_TEMPLATE % (x, y, r, color)
+            + TEXT_TEMPLATE % (x, y, textwidth, textcolor, label))
 
 def split_at_last(s, d):
     if d in s:

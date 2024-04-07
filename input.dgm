@@ -3,4 +3,5 @@ color blue
 rect A "Starting_Point" center 100 100 size 100 50 text-color white
 rrect B "Ending_Point" ul 300 300 size 100 150 color green
 oval C Oval center 300 120 size 100 70 color #0080FF
+circle CC center 200 420 radius 50 color #FF8000
 edge E from A.lr to B color yellow
