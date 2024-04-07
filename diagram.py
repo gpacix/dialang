@@ -10,6 +10,8 @@ RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="
 
 LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
 
+TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" lengthAdjust="spacingAndGlyphs" fill="black">%s</text>'
+
 context = { 'color': 'gray', 'edge_width': 3, 'diagram_width': 1000, 'diagram_height': 750 }
           #, 'edge_color': None, 'node_color': None
 
@@ -98,17 +100,30 @@ def get_color(r):
         return r['color']
     return get_color_for_type('node')
 
-def make_rect(r):
+def get_label(item):
+    if 'label' in item:
+        return item['label']
+    return item['list'][0]
+
+def make_either_rect(r, rx, ry):
     ul = get_ul(r)
+    x = to_string(ul[0])
+    y = to_string(ul[1])
+    label = get_label(r)
     s = r['size']
+    width = to_string(s[0])
+    height = to_string(s[1])
+    textwidth = to_string(s[0]*.95)
+    texty = to_string(ul[1]+s[1]/2.0)
     color = get_color(r)
-    return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 0, 0, color)
+    return (RECT_TEMPLATE % (x, y, width, height, rx, ry, color)
+            + TEXT_TEMPLATE % (x, texty, textwidth, label))
+
+def make_rect(r):
+    return make_either_rect(r, 0, 0)
 
 def make_rounded_rect(r):
-    ul = get_ul(r)
-    s = r['size']
-    color = get_color(r)
-    return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 10, 10, color)
+    return make_either_rect(r, 10, 10)
 
 def split_at_last(s, d):
     if d in s:
