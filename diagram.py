@@ -26,9 +26,16 @@ def to_number(s):
     return float(s)
 
 def to_string(n):
+    if type(n) == str:
+        return n
     if n == int(n):
         return '%d' % n
-    return '%f' % n
+    if type(n) == float:
+        return '%f' % n
+    return '%s' % n
+
+def to_strings(*args):
+    return tuple(to_string(x) for x in args)
 
 def partition(pred, items):
     truefor, falsefor = [], []
@@ -121,22 +128,18 @@ def get_label(item):
             return ls[0]
     return item['id']
 
+def get_text_width(s, maxwidth):
+    return maxwidth*.95
+
 def make_either_rect(r, rx, ry):
     label = get_label(r)
-    color = get_color(r)
-    textcolor = get_text_color(r)
-    ul = get_ul(r)
-    x = to_string(ul[0])
-    y = to_string(ul[1])
-    s = r['size']
-    width = to_string(s[0])
-    height = to_string(s[1])
-    textwidth = to_string(s[0]*.95)
-    c = get_center(r)
-    textx = to_string(c[0])
-    texty = to_string(c[1] + context['font_half_height'])
-    return (RECT_TEMPLATE % (x, y, width, height, rx, ry, color)
-            + TEXT_TEMPLATE % (textx, texty, textwidth, textcolor, label))
+    x, y = get_ul(r)
+    width, height = r['size']
+    textwidth = get_text_width(label, width)
+    textx, texty = get_center(r)
+    texty += context['font_half_height']
+    return (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(r))
+            + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(r), label))
 
 def make_rect(r):
     return make_either_rect(r, 0, 0)
@@ -150,16 +153,13 @@ def make_oval(r):
     return make_either_rect(r, m, m)
 
 def make_circle(item):
-    r = to_number(item['radius'])
-    textwidth = to_string(2*r*.95)
-    r = to_string(r)
-    c = item['center']
-    x, y = to_string(c[0]), to_string(c[1])
     label = get_label(item)
-    color = get_color(item)
-    textcolor = get_text_color(item)
-    return (CIRCLE_TEMPLATE % (x, y, r, color)
-            + TEXT_TEMPLATE % (x, y, textwidth, textcolor, label))
+    x, y = item['center']
+    r = to_number(item['radius'])
+    textwidth = get_text_width(label, 2 * r)
+    texty = y + context['font_half_height']
+    return (CIRCLE_TEMPLATE % to_strings(x, y, r, get_color(item))
+            + TEXT_TEMPLATE % to_strings(x, texty, textwidth, get_text_color(item), label))
 
 def split_at_last(s, d):
     if d in s:
@@ -189,7 +189,7 @@ def make_edge(edge):
     width = get_width(edge)
     x1, y1 = get_start(edge)
     x2, y2 = get_end(edge)
-    return LINE_TEMPLATE % (to_string(x1), to_string(y1), to_string(x2), to_string(y2), color, width)
+    return LINE_TEMPLATE % to_strings(x1, y1, x2, y2, color, width)
 
 def make_diagram(diagram):
     context['diagram_width']  = diagram['width']

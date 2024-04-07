@@ -65,7 +65,7 @@ parsed: {'list': [], 'name': 'edge', 'id': 'E', 'from': 'A.lr', 'to': 'B'}
 <svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
 <rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />
 </svg>
-[15:22:53 gpaci@mac drawing-language]$ python diagram.py < input.dgm 
+[15:22:53 gpaci@mac drawing-language]$ python diagram.py < input.dgm
 <svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
 <line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
 <rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />
@@ -125,3 +125,14 @@ python diagram.py < input.dgm
 <circle cx="200" cy="420" r="50" fill="#FF8000" /><text x="200" y="420" textLength="95" fill="black" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text>
 </svg>
 [17:52:47 gpaci@mac drawing-language]$
+
+[18:49:40 gpaci@mac drawing-language]$ python diagram.py < input.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" /><text x="100" y="106" textLength="95" fill="white" text-anchor="middle" lengthAdjust="spacingAndGlyphs">"Starting_Point"</text>
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" /><text x="350" y="381" textLength="95" fill="black" text-anchor="middle" lengthAdjust="spacingAndGlyphs">"Ending_Point"</text>
+<rect x="250" y="85" width="100" height="70" rx="35" ry="35" fill="#0080FF" /><text x="300" y="126" textLength="40" fill="black" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Oval</text>
+<circle cx="200" cy="420" r="50" fill="#FF8000" /><text x="200" y="426" textLength="20" fill="black" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text>
+</svg>
+[18:54:14 gpaci@mac drawing-language]$
+

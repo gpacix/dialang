@@ -1,13 +1,16 @@
 # TODO
 
  __ add some more shapes  04/07/24 17:17:36 EDT
- __ fix stretching: guess at width, take minimum
- __ let the user set the font
- __ add multi-line labels, or wrap them, or both
+    __ diamond
+    __ cylinder
+ __ let the user set the font 04/07/24 17:55:23 EDT
+ __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
  __ respect the lr/ul positions for edge start/end  04/07/24 16:25:26 EDT
  __ add a background, or let the user do so: background color gray  04/07/24 14:26:05 EDT
  __ make the language case-insensitive  04/07/24 13:13:42 EDT
+ __ start dealing with stroke, not just fill  04/07/24 19:00:17 EDT
  __ recognize double-quoted and single-quoted strings as single tokens  04/07/24 14:06:23 EDT
+ __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
 
 # DONE
  ++ take a line and turn it into a dict  04/07/24 13:27:43 EDT  d. 04/07/24 13:47:25 EDT
