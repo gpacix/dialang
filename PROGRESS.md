@@ -136,3 +136,17 @@ python diagram.py < input.dgm
 </svg>
 [18:54:14 gpaci@mac drawing-language]$
 
+[19:21:31 gpaci@mac drawing-language]$ python diagram.py text-color=gray edge_width=10 < input.dgm
+error:
+  unknown default: text-color
+valid defaults are: color text_color edge_width diagram_width diagram_height font_half_height font_average_width
+[19:23:36 gpaci@mac drawing-language]$ python diagram.py text_color=gray edge_width=10 < input.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:10" />
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" /><text x="100" y="106" textLength="95" fill="white" text-anchor="middle" lengthAdjust="spacingAndGlyphs">"Starting_Point"</text>
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" /><text x="350" y="381" textLength="95" fill="gray" text-anchor="middle" lengthAdjust="spacingAndGlyphs">"Ending_Point"</text>
+<rect x="250" y="85" width="100" height="70" rx="35" ry="35" fill="#0080FF" /><text x="300" y="126" textLength="40" fill="gray" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Oval</text>
+<circle cx="200" cy="420" r="50" fill="#FF8000" /><text x="200" y="426" textLength="20" fill="gray" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text>
+</svg>
+[19:23:44 gpaci@mac drawing-language]$
+

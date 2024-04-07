@@ -196,13 +196,32 @@ def make_diagram(diagram):
     context['diagram_width']  = diagram['width']
     context['diagram_height'] = diagram['height']
 
+def update_context(args):
+    errors = []
+    for a in args:
+        if '=' in a:
+            k, v = a.split('=', 1)
+            if k in context:
+                t = type(context[k])
+                context[k] = t(v)
+            else:
+                errors.append('  unknown default: %s' % k)
+    if errors:
+        print('error:', file=sys.stderr)
+        for err in errors:
+            print(err, file=sys.stderr)
+        print('valid defaults are:', ' '.join(context.keys()), file=sys.stderr)
+        sys.exit(2)
+
 def open_file(args):
     if args[0] != '-':
         return open(args[0])
     return sys.stdin
 
 def main(args):
-    lines = open_file(args + ['-']).readlines()
+    filenameargs = [a for a in args if '=' not in a]
+    lines = open_file(filenameargs + ['-']).readlines()
+    update_context(args)
 
     # remove blank lines and comment lines (first non-whitespace char is #):
     lines = [line for line in lines if line.lstrip() and line.lstrip()[0] != '#']

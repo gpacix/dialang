@@ -21,3 +21,4 @@
  ++ add oval  04/07/24 17:17:36 EDT  d. 04/07/24 17:22:39 EDT
  ++ add circle  04/07/24 17:17:36 EDT  d. 04/07/24 17:54:08 EDT
  ++ fix stretching: guess at width, take minimum  d. 04/07/24 18:57:44 EDT
+ ++ let user modify context from the command line  d. 04/07/24 19:25:42 EDT
