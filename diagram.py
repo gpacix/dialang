@@ -10,13 +10,13 @@ RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="
 
 LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
 
-TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" fill="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
 CIRCLE_TEMPLATE = '<circle cx="%s" cy="%s" r="%s" fill="%s" />'
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
-            'font_half_height': 6, 'font_average_width': 10 }
+            'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif' }
           #, 'edge_color': None, 'node_color': None
 
 objects = { }
@@ -120,6 +120,11 @@ def get_text_color(r):
         return r['text-color']
     return get_color_for_type('text')
 
+def get_font_family(r):
+    if 'font-family' in r:
+        return r['font-family']
+    return context['font_family']
+
 def get_label(item):
     if 'label' in item:
         return item['label']
@@ -140,7 +145,8 @@ def make_either_rect(r, rx, ry):
     textx, texty = get_center(r)
     texty += context['font_half_height']
     return (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(r))
-            + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(r), label))
+            + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(r),
+                                         get_font_family(r), label))
 
 def make_rect(r):
     return make_either_rect(r, 0, 0)
@@ -160,7 +166,8 @@ def make_circle(item):
     textwidth = get_text_width(label, 2 * r)
     texty = y + context['font_half_height']
     return (CIRCLE_TEMPLATE % to_strings(x, y, r, get_color(item))
-            + TEXT_TEMPLATE % to_strings(x, texty, textwidth, get_text_color(item), label))
+            + TEXT_TEMPLATE % to_strings(x, texty, textwidth, get_text_color(item),
+                                         get_font_family(item), label))
 
 def split_at_last(s, d):
     if d in s:

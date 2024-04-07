@@ -3,8 +3,11 @@
  __ add some more shapes  04/07/24 17:17:36 EDT
     __ diamond
     __ cylinder
- __ let the user set the font 04/07/24 17:55:23 EDT
+ __ let the user declare a style for an item (so CSS can affect it)  04/07/24 19:29:54 EDT
  __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
+ __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
+ __ add URL links to nodes, edges, maybe text (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT
+ __ figure out good syntax for no label 04/07/24 19:30:16 EDT
  __ respect the lr/ul positions for edge start/end  04/07/24 16:25:26 EDT
  __ add a background, or let the user do so: background color gray  04/07/24 14:26:05 EDT
  __ make the language case-insensitive  04/07/24 13:13:42 EDT
@@ -22,3 +25,4 @@
  ++ add circle  04/07/24 17:17:36 EDT  d. 04/07/24 17:54:08 EDT
  ++ fix stretching: guess at width, take minimum  d. 04/07/24 18:57:44 EDT
  ++ let user modify context from the command line  d. 04/07/24 19:25:42 EDT
+ ++ let the user set the font 04/07/24 17:55:23 EDT  04/07/24 19:36:28 EDT
