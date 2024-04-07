@@ -20,3 +20,4 @@
  ++ add a text-color attribute for items  04/07/24 16:50:55 EDT  d. 04/07/24 16:59:30 EDT
  ++ add oval  04/07/24 17:17:36 EDT  d. 04/07/24 17:22:39 EDT
  ++ add circle  04/07/24 17:17:36 EDT  d. 04/07/24 17:54:08 EDT
+ ++ fix stretching: guess at width, take minimum  d. 04/07/24 18:57:44 EDT

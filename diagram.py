@@ -15,7 +15,8 @@ TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" fill="%s" text-anchor="midd
 CIRCLE_TEMPLATE = '<circle cx="%s" cy="%s" r="%s" fill="%s" />'
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
-            'diagram_width': 1000, 'diagram_height': 750, 'font_half_height': 6, }
+            'diagram_width': 1000, 'diagram_height': 750,
+            'font_half_height': 6, 'font_average_width': 10 }
           #, 'edge_color': None, 'node_color': None
 
 objects = { }
@@ -129,7 +130,7 @@ def get_label(item):
     return item['id']
 
 def get_text_width(s, maxwidth):
-    return maxwidth*.95
+    return min(context['font_average_width'] * len(s), maxwidth*.95)
 
 def make_either_rect(r, rx, ry):
     label = get_label(r)
