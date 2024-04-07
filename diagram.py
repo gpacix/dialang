@@ -10,9 +10,10 @@ RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="
 
 LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
 
-TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" lengthAdjust="spacingAndGlyphs" fill="black">%s</text>'
+TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" lengthAdjust="spacingAndGlyphs" fill="%s">%s</text>'
 
-context = { 'color': 'gray', 'edge_width': 3, 'diagram_width': 1000, 'diagram_height': 750 }
+context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
+            'diagram_width': 1000, 'diagram_height': 750, 'font_half_height': 6, }
           #, 'edge_color': None, 'node_color': None
 
 objects = { }
@@ -52,7 +53,7 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'from', 'to', 'width', 'height']:
+        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height']:
             r[current_token] = tokens[i+1]
             i += 2
         else:
@@ -100,10 +101,19 @@ def get_color(r):
         return r['color']
     return get_color_for_type('node')
 
+def get_text_color(r):
+    if 'text-color' in r:
+        return r['text-color']
+    return get_color_for_type('text')
+
 def get_label(item):
     if 'label' in item:
         return item['label']
-    return item['list'][0]
+    if 'list' in item:
+        ls = item['list']
+        if ls:
+            return ls[0]
+    return item['id']
 
 def make_either_rect(r, rx, ry):
     ul = get_ul(r)
@@ -114,10 +124,11 @@ def make_either_rect(r, rx, ry):
     width = to_string(s[0])
     height = to_string(s[1])
     textwidth = to_string(s[0]*.95)
-    texty = to_string(ul[1]+s[1]/2.0)
+    texty = to_string(ul[1] + s[1]/2.0 + context['font_half_height'])
     color = get_color(r)
+    textcolor = get_text_color(r)
     return (RECT_TEMPLATE % (x, y, width, height, rx, ry, color)
-            + TEXT_TEMPLATE % (x, texty, textwidth, label))
+            + TEXT_TEMPLATE % (x, texty, textwidth, textcolor, label))
 
 def make_rect(r):
     return make_either_rect(r, 0, 0)
