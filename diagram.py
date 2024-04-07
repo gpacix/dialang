@@ -2,7 +2,7 @@
 import sys
 
 SVG_TEMPLATE='''\
-<svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
+<svg width="%s" height="%s" xmlns="http://www.w3.org/2000/svg">
 %s
 </svg>'''
 
@@ -10,7 +10,8 @@ RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="
 
 LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
 
-context = { 'color': 'gray', 'edge_width': 3 } #, 'edge_color': None, 'node_color': None
+context = { 'color': 'gray', 'edge_width': 3, 'diagram_width': 1000, 'diagram_height': 750 }
+          #, 'edge_color': None, 'node_color': None
 
 objects = { }
 
@@ -49,7 +50,7 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'from', 'to', 'width']:
+        elif current_token in ['color', 'from', 'to', 'width', 'height']:
             r[current_token] = tokens[i+1]
             i += 2
         else:
@@ -68,6 +69,8 @@ def make_object(parsed):
         return make_rounded_rect(parsed)
     elif kind == 'edge':
         return make_edge(parsed)
+    elif kind == 'diagram':
+        return make_diagram(parsed)
     else:
         return None
 
@@ -137,6 +140,9 @@ def make_edge(edge):
     x2, y2 = get_end(edge)
     return LINE_TEMPLATE % (to_string(x1), to_string(y1), to_string(x2), to_string(y2), color, width)
 
+def make_diagram(diagram):
+    context['diagram_width']  = diagram['width']
+    context['diagram_height'] = diagram['height']
 
 def open_file(args):
     if args[0] != '-':
@@ -155,7 +161,7 @@ def main(args):
 
     svgobjects = [make_object(thing) for thing in edges + nonedges]
     svgobjects = [ob for ob in svgobjects if ob]
-    print(SVG_TEMPLATE % '\n'.join(svgobjects))
+    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], '\n'.join(svgobjects)))
 
 if __name__ == '__main__':
     main(sys.argv[1:])

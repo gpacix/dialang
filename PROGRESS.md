@@ -77,3 +77,10 @@ parsed: {'list': [], 'name': 'edge', 'id': 'E', 'from': 'A.lr', 'to': 'B'}
 [15:41:02 gpaci@mac drawing-language]$ python random-graph.py | python diagram.py > randgraph.svg
 [15:41:22 gpaci@mac drawing-language]$ # open that image!
 
+[16:24:19 gpaci@mac drawing-language]$ python diagram.py input.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" />
+</svg>
+[16:27:37 gpaci@mac drawing-language]$
