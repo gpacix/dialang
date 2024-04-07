@@ -12,7 +12,7 @@ SVG_TEMPLATE='''\
 %s
 </svg>'''
 
-RECT_TEMPLATE='<rect x="%f" y="%f" width="%f" height="%f" rx="%f" ry="%f" fill="%s" />'
+RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
 
 context = { 'color': None, 'edge_color': None, 'node_color': None }
 
@@ -20,6 +20,11 @@ def to_number(s):
     if s.isnumeric():
         return int(s)
     return float(s)
+
+def to_string(n):
+    if type(n) == int:
+        return '%d' % n
+    return '%f' % n
 
 def tokenize(s):
     # later, respect quotes
@@ -55,9 +60,21 @@ def make_object(s):
         context['color'] = tokens[1]
         return None
     elif t0 == 'rect':
-        return RECT_TEMPLATE % (10, 10, 20, 15, 0, 0, context['color'])
+        return make_rect(parsed)
     else:
         return None
+
+def get_ul(r):
+    if 'ul' in r:
+        return r['ul']
+    c = r['center']
+    s = r['size']
+    return (c[0]-s[0]/2.0, c[1]-s[1]/2.0)
+
+def make_rect(r):
+    ul = get_ul(r)
+    s = r['size']
+    return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 0, 0, context['color'])
 
 def main(args):
     # for now, just ignore the args and use our hard-coded input:
