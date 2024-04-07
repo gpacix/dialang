@@ -48,3 +48,13 @@ parsed: {'list': [], 'name': 'edge', 'id': 'E', 'from': 'A.lr', 'to': 'B'}
 <line x1="100" y1="100" x2="350" y2="375" style="stroke:blue;stroke-width:3" />
 </svg>
 [14:47:05 gpaci@mac drawing-language]$  # note how the edge is on top of the nodes
+
+[15:06:06 gpaci@mac drawing-language]$ python diagram.py
+[{'list': [], 'name': 'color', 'id': 'blue'}, {'list': ['"Starting_Point"'], 'name': 'rect', 'id': 'A', 'center': (100, 100), 'size': (100, 50)}, {'list': ['"Ending_Point"'], 'name': 'rrect', 'id': 'B', 'ul': (300, 300), 'size': (100, 150), 'color': 'green'}, {'list': [], 'name': 'edge', 'id': 'E', 'from': 'A.lr', 'to': 'B', 'color': 'yellow'}]
+['<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />', '<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />', '<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" />']
+<svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" />
+</svg>
+[15:06:22 gpaci@mac drawing-language]$

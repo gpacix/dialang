@@ -4,7 +4,7 @@ INPUT='''
 color blue
 rect A "Starting_Point" center 100 100 size 100 50
 rrect B "Ending_Point" ul 300 300 size 100 150 color green
-edge E from A.lr to B
+edge E from A.lr to B color yellow
 '''
 
 SVG_TEMPLATE='''\
@@ -30,6 +30,15 @@ def to_string(n):
         return '%d' % n
     return '%f' % n
 
+def partition(pred, items):
+    truefor, falsefor = [], []
+    for it in items:
+        if pred(it):
+            truefor.append(it)
+        else:
+            falsefor.append(it)
+    return truefor, falsefor
+
 def tokenize(s):
     # later, respect quotes
     return s.split()
@@ -54,21 +63,16 @@ def parse(tokens):
             i += 1
     return r
 
-def make_object(s):
-    tokens = tokenize(s)
-    print('tokens:',tokens)
-    parsed = parse(tokens)
-    print('parsed:',parsed)
-    objects[parsed['id']] = parsed
-    t0 = tokens[0]
-    if t0 == 'color':
-        context['color'] = tokens[1]
+def make_object(parsed):
+    kind = parsed['name']
+    if kind == 'color':
+        context['color'] = parsed['id']
         return None
-    elif t0 == 'rect':
+    elif kind == 'rect':
         return make_rect(parsed)
-    elif t0 == 'rrect':
+    elif kind == 'rrect':
         return make_rounded_rect(parsed)
-    elif t0 == 'edge':
+    elif kind == 'edge':
         return make_edge(parsed)
     else:
         return None
@@ -114,6 +118,9 @@ def split_at_last(s, d):
         return (s[:s.rfind(d)], s[s.rfind(d)+1:])
     return (s, None)
 
+def is_edge(obj):
+    return obj['name'] == 'edge'
+
 def get_start(edge):
     sourceid, pos = split_at_last(edge['from'], '.')
     source = objects[sourceid]
@@ -142,10 +149,15 @@ def main(args):
     lines = INPUT.split('\n')
     # remove blank lines and comment lines (first non-whitespace char is #):
     lines = [line for line in lines if line.lstrip() and line.lstrip()[0] != '#']
-    objects = [make_object(line) for line in lines]
-    objects = [ob for ob in objects if ob]
-    #print(objects)
-    print(SVG_TEMPLATE % '\n'.join(objects))
+    parsed = [parse(tokenize(line)) for line in lines]
+    print(parsed)
+    for obj in parsed:
+        objects[obj['id']] = obj
+    edges, nonedges = partition(is_edge, parsed)
+    svgobjects = [make_object(thing) for thing in edges + nonedges]
+    svgobjects = [ob for ob in svgobjects if ob]
+    print(svgobjects)
+    print(SVG_TEMPLATE % '\n'.join(svgobjects))
 
 if __name__ == '__main__':
     import sys
