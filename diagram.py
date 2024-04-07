@@ -49,7 +49,7 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'from', 'to']:
+        elif current_token in ['color', 'from', 'to', 'width']:
             r[current_token] = tokens[i+1]
             i += 2
         else:

@@ -14,7 +14,7 @@ def main(args):
         y = (math.sin(i*(2*math.pi)/N) + 1)*R
         print("rect ID%d ul %f %f size 30 20" % (i, x, y))
     for i in range(int(N*N*C)):
-        print("edge color black width .1 from ID%d to ID%d" % (random.randint(0,N-1), random.randint(0,N-1), ))
+        print("edge E%d color black width 1 from ID%d to ID%d" % (i, random.randint(0,N-1), random.randint(0,N-1), ))
 
 if __name__ == '__main__':
     import sys
