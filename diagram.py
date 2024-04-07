@@ -14,7 +14,11 @@ SVG_TEMPLATE='''\
 
 RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
 
-context = { 'color': None, 'edge_color': None, 'node_color': None }
+LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
+
+context = { 'color': 'gray', 'edge_width': 3 } #, 'edge_color': None, 'node_color': None
+
+objects = { }
 
 def to_number(s):
     if s.isnumeric():
@@ -55,6 +59,7 @@ def make_object(s):
     print('tokens:',tokens)
     parsed = parse(tokens)
     print('parsed:',parsed)
+    objects[parsed['id']] = parsed
     t0 = tokens[0]
     if t0 == 'color':
         context['color'] = tokens[1]
@@ -63,6 +68,8 @@ def make_object(s):
         return make_rect(parsed)
     elif t0 == 'rrect':
         return make_rounded_rect(parsed)
+    elif t0 == 'edge':
+        return make_edge(parsed)
     else:
         return None
 
@@ -72,6 +79,13 @@ def get_ul(r):
     c = r['center']
     s = r['size']
     return (c[0]-s[0]/2.0, c[1]-s[1]/2.0)
+
+def get_center(r):
+    if 'center' in r:
+        return r['center']
+    ul = r['ul']
+    s = r['size']
+    return (ul[0]+s[0]/2.0, ul[1]+s[1]/2.0)
 
 def get_color_for_type(t):
     if (t + '_color') in context:
@@ -94,6 +108,34 @@ def make_rounded_rect(r):
     s = r['size']
     color = get_color(r)
     return RECT_TEMPLATE % (to_string(ul[0]), to_string(ul[1]), to_string(s[0]), to_string(s[1]), 10, 10, color)
+
+def split_at_last(s, d):
+    if d in s:
+        return (s[:s.rfind(d)], s[s.rfind(d)+1:])
+    return (s, None)
+
+def get_start(edge):
+    sourceid, pos = split_at_last(edge['from'], '.')
+    source = objects[sourceid]
+    return get_center(source)
+
+def get_end(edge):
+    destid, pos = split_at_last(edge['to'], '.')
+    dest = objects[destid]
+    return get_center(dest)
+
+def get_width(edge):
+    if 'width' in edge:
+        return edge['width']
+    return context['edge_width']
+
+def make_edge(edge):
+    color = get_color(edge)
+    width = get_width(edge)
+    x1, y1 = get_start(edge)
+    x2, y2 = get_end(edge)
+    return LINE_TEMPLATE % (to_string(x1), to_string(y1), to_string(x2), to_string(y2), color, width)
+
 
 def main(args):
     # for now, just ignore the args and use our hard-coded input:
