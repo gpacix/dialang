@@ -74,3 +74,6 @@ parsed: {'list': [], 'name': 'edge', 'id': 'E', 'from': 'A.lr', 'to': 'B'}
 [15:23:57 gpaci@mac drawing-language]$ python diagram.py < input.dgm > output.svg
 [15:24:04 gpaci@mac drawing-language]$
 
+[15:41:02 gpaci@mac drawing-language]$ python random-graph.py | python diagram.py > randgraph.svg
+[15:41:22 gpaci@mac drawing-language]$ # open that image!
+
