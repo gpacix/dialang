@@ -1,11 +1,5 @@
 #!/usr/bin/python3
-
-INPUT='''
-color blue
-rect A "Starting_Point" center 100 100 size 100 50
-rrect B "Ending_Point" ul 300 300 size 100 150 color green
-edge E from A.lr to B color yellow
-'''
+import sys
 
 SVG_TEMPLATE='''\
 <svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
@@ -144,21 +138,24 @@ def make_edge(edge):
     return LINE_TEMPLATE % (to_string(x1), to_string(y1), to_string(x2), to_string(y2), color, width)
 
 
+def open_file(args):
+    if args[0] != '-':
+        return open(args[0])
+    return sys.stdin
+
 def main(args):
-    # for now, just ignore the args and use our hard-coded input:
-    lines = INPUT.split('\n')
+    lines = open_file(args + ['-']).readlines()
+
     # remove blank lines and comment lines (first non-whitespace char is #):
     lines = [line for line in lines if line.lstrip() and line.lstrip()[0] != '#']
     parsed = [parse(tokenize(line)) for line in lines]
-    print(parsed)
     for obj in parsed:
         objects[obj['id']] = obj
     edges, nonedges = partition(is_edge, parsed)
+
     svgobjects = [make_object(thing) for thing in edges + nonedges]
     svgobjects = [ob for ob in svgobjects if ob]
-    print(svgobjects)
     print(SVG_TEMPLATE % '\n'.join(svgobjects))
 
 if __name__ == '__main__':
-    import sys
     main(sys.argv[1:])

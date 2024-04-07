@@ -58,3 +58,19 @@ parsed: {'list': [], 'name': 'edge', 'id': 'E', 'from': 'A.lr', 'to': 'B'}
 <rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" />
 </svg>
 [15:06:22 gpaci@mac drawing-language]$
+
+[15:22:43 gpaci@mac drawing-language]$ echo -e 'color blue\nrect A "Starting_Point" center 100 100 size 100 50' | python diagram.py
+[{'list': [], 'name': 'color', 'id': 'blue'}, {'list': ['"Starting_Point"'], 'name': 'rect', 'id': 'A', 'center': (100, 100), 'size': (100, 50)}]
+['<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />']
+<svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />
+</svg>
+[15:22:53 gpaci@mac drawing-language]$ python diagram.py < input.dgm 
+<svg width="1000" height="750" xmlns="http://www.w3.org/2000/svg">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
+<rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" />
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" />
+</svg>
+[15:23:57 gpaci@mac drawing-language]$ python diagram.py < input.dgm > output.svg
+[15:24:04 gpaci@mac drawing-language]$
+
