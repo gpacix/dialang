@@ -1,0 +1,8 @@
+diagram Example width 800 height 600 stylesheet colorful.css
+color blue
+rect A "Starting Point" center 100 100 size 100 50  url https://news.ycombinator.com  text-color white
+rrect B "Ending Point" ul 300 300 size 100 150 color green class "unimportant trivial" text-class unimportant
+oval C Oval center 300 120 size 100 70 color #0080FF
+circle CC center 200 420 radius 50 color #FF8000 url https://www.duckduckgo.com class important
+edge E from A.lr to B color yellow
+edge F from B to C class unimportant

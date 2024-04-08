@@ -3,20 +3,22 @@ import sys
 
 SVG_TEMPLATE='''\
 <svg width="%s" height="%s" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="%s" type="text/css" />
 %s
 </svg>'''
 
-RECT_TEMPLATE='<rect x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
+RECT_TEMPLATE='<rect class="node%s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
 
-LINE_TEMPLATE='<line x1="%s" y1="%s" x2="%s" y2="%s" style="stroke:%s;stroke-width:%s" />'
+LINE_TEMPLATE='<line class="edge%s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
-TEXT_TEMPLATE = '<text x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+TEXT_TEMPLATE = '<text class="text%s" x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
-CIRCLE_TEMPLATE = '<circle cx="%s" cy="%s" r="%s" fill="%s" />'
+CIRCLE_TEMPLATE = '<circle class="node%s" cx="%s" cy="%s" r="%s" fill="%s" />'
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
-            'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif' }
+            'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif',
+            'css_href': 'default.css', }
           #, 'edge_color': None, 'node_color': None
 
 objects = { }
@@ -86,7 +88,8 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius', 'url']:
+        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius',
+                               'url', 'stylesheet', 'class', 'text-class']:
             r[current_token] = tokens[i+1]
             i += 2
         else:
@@ -161,6 +164,16 @@ def get_url(item):
     if 'url' in item:
         return item['url']
 
+def get_class_str(item):
+    if 'class' in item:
+        return ' ' + item['class']
+    return ''
+
+def get_text_class_str(item):
+    if 'text-class' in item:
+        return ' ' + item['text-class']
+    return ''
+
 def get_text_width(s, maxwidth):
     return min(context['font_average_width'] * len(s), maxwidth*.95)
 
@@ -171,9 +184,11 @@ def make_either_rect(item, rx, ry):
     textwidth = get_text_width(label, width)
     textx, texty = get_center(item)
     texty += context['font_half_height']
-    node = (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(item))
-            + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(item),
-                                         get_font_family(item), label))
+    css_classes = get_class_str(item)
+    text_css_classes = get_text_class_str(item)
+    node = (RECT_TEMPLATE % to_strings(css_classes, x, y, width, height, rx, ry, get_color(item))
+            + TEXT_TEMPLATE % to_strings(text_css_classes, textx, texty, textwidth,
+                                         get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
@@ -196,9 +211,11 @@ def make_circle(item):
     r = to_number(item['radius'])
     textwidth = get_text_width(label, 2 * r)
     texty = y + context['font_half_height']
-    node = (CIRCLE_TEMPLATE % to_strings(x, y, r, get_color(item))
-            + TEXT_TEMPLATE % to_strings(x, texty, textwidth, get_text_color(item),
-                                         get_font_family(item), label))
+    css_classes = get_class_str(item)
+    text_css_classes = get_text_class_str(item)
+    node = (CIRCLE_TEMPLATE % to_strings(css_classes, x, y, r, get_color(item))
+            + TEXT_TEMPLATE % to_strings(text_css_classes, x, texty, textwidth,
+                                         get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
@@ -232,11 +249,14 @@ def make_edge(edge):
     width = get_width(edge)
     x1, y1 = get_start(edge)
     x2, y2 = get_end(edge)
-    return LINE_TEMPLATE % to_strings(x1, y1, x2, y2, color, width)
+    css_classes = get_class_str(edge)
+    return LINE_TEMPLATE % to_strings(css_classes, x1, y1, x2, y2, color, width)
 
 def make_diagram(diagram):
     context['diagram_width']  = diagram['width']
     context['diagram_height'] = diagram['height']
+    if 'stylesheet' in diagram:
+        context['css_href'] = diagram['stylesheet']
 
 def update_context(args):
     errors = []
@@ -275,7 +295,8 @@ def main(args):
 
     svgobjects = [make_object(thing) for thing in edges + nonedges]
     svgobjects = [ob for ob in svgobjects if ob]
-    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], '\n'.join(svgobjects)))
+    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], context['css_href'],
+                          '\n'.join(svgobjects)))
 
 if __name__ == '__main__':
     main(sys.argv[1:])

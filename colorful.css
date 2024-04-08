@@ -1,0 +1,15 @@
+svg { background-color: #F8FFF0; }
+
+.node { opacity: 1.95; fill: #000060; stroke: orange; }
+
+.edge { stroke-width: 17; fill: black; stroke: purple;}
+
+.text { fill: #00FF00; font-family: skia,helvetica,sans-serif; }
+
+.important { fill: red; }
+
+.unimportant.node { fill: lightblue; }
+
+.unimportant.text { fill: gray; }
+
+.unimportant.edge { stroke: #8080A0; }
