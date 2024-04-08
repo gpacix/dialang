@@ -168,3 +168,13 @@ circle CC center 200 420 radius 50 color #FF8000
 edge E from A.lr to B color yellow
 [21:03:41 gpaci@mac drawing-language]$
 
+[21:26:07 gpaci@mac drawing-language]$ python diagram.py input.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<line x1="100" y1="100" x2="350" y2="375" style="stroke:yellow;stroke-width:3" />
+<a xlink:href="https://news.ycombinator.com" xlink:title="click"><rect x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" /><text x="100" y="106" textLength="95" fill="white" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Starting Point</text></a>
+<rect x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" /><text x="350" y="381" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Ending Point</text>
+<rect x="250" y="85" width="100" height="70" rx="35" ry="35" fill="#0080FF" /><text x="300" y="126" textLength="40" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Oval</text>
+<a xlink:href="https://www.duckduckgo.com" xlink:title="click"><circle cx="200" cy="420" r="50" fill="#FF8000" /><text x="200" y="426" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text></a>
+</svg>
+[21:26:44 gpaci@mac drawing-language]$
+

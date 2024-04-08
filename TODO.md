@@ -6,7 +6,7 @@
  __ let the user declare a style for an item (so CSS can affect it)  04/07/24 19:29:54 EDT
  __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
  __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
- __ add URL links to nodes, edges, maybe text (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT
+ __ add URL links to edges, (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT
  __ add arrows to the edges (this will be tricky)  04/07/24 21:05:12 EDT
  __ figure out good syntax for no label 04/07/24 19:30:16 EDT
  __ respect the lr/ul positions for edge start/end  04/07/24 16:25:26 EDT
@@ -27,3 +27,4 @@
  ++ let user modify context from the command line  d. 04/07/24 19:25:42 EDT
  ++ let the user set the font 04/07/24 17:55:23 EDT  04/07/24 19:36:28 EDT
  ++ recognize double-quoted and single-quoted strings as single tokens  04/07/24 14:06:23 EDT d. 04/07/24 21:05:26 EDT
+ ++ add URL links to nodes, text (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT d. 04/07/24 21:30:19 EDT

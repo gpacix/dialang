@@ -2,7 +2,7 @@
 import sys
 
 SVG_TEMPLATE='''\
-<svg width="%s" height="%s" xmlns="http://www.w3.org/2000/svg">
+<svg width="%s" height="%s" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 %s
 </svg>'''
 
@@ -134,7 +134,7 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius']:
+        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius', 'url']:
             r[current_token] = tokens[i+1]
             i += 2
         else:
@@ -205,21 +205,29 @@ def get_label(item):
             return ls[0]
     return item['id']
 
+def get_url(item):
+    if 'url' in item:
+        return item['url']
+
 def get_text_width(s, maxwidth):
     return min(context['font_average_width'] * len(s), maxwidth*.95)
 
-def make_either_rect(r, rx, ry):
-    label = get_label(r)
-    x, y = get_ul(r)
-    width, height = r['size']
+def make_either_rect(item, rx, ry):
+    label = get_label(item)
+    x, y = get_ul(item)
+    width, height = item['size']
     textwidth = get_text_width(label, width)
-    textx, texty = get_center(r)
+    textx, texty = get_center(item)
     texty += context['font_half_height']
-    #print('r:', r)
-    #print('text color:', get_text_color(r))
-    return (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(r))
-            + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(r),
-                                         get_font_family(r), label))
+    #print('item:', item)
+    #print('text color:', get_text_color(item))
+    node = (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(item))
+            + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(item),
+                                         get_font_family(item), label))
+    url = get_url(item)
+    if url:
+        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+    return node
 
 def make_rect(r):
     return make_either_rect(r, 0, 0)
@@ -238,9 +246,13 @@ def make_circle(item):
     r = to_number(item['radius'])
     textwidth = get_text_width(label, 2 * r)
     texty = y + context['font_half_height']
-    return (CIRCLE_TEMPLATE % to_strings(x, y, r, get_color(item))
+    node = (CIRCLE_TEMPLATE % to_strings(x, y, r, get_color(item))
             + TEXT_TEMPLATE % to_strings(x, texty, textwidth, get_text_color(item),
                                          get_font_family(item), label))
+    url = get_url(item)
+    if url:
+        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+    return node
 
 def split_at_last(s, d):
     if d in s:
