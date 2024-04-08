@@ -56,71 +56,23 @@ def tokenize(s):
     tokens = []
     acc = ''
     i = 0
-    #print('s input:', s)
     while i < length:
         c = s[i]
         if c in ['"', "'"]:
             if acc:
                 tokens += acc.split(' ')
-                #print('a tokens:',tokens)
                 acc = ''
             i += 1
             start = i
             while i < length and s[i] != c:
                 i += 1
             tokens.append(s[start:i])
-            #print('b tokens:',tokens)
         else:
             acc += c
         i += 1
     if acc:
         tokens += acc.split(' ')
-        #print('c tokens:',tokens)
     return [t for t in tokens if t]
-
-def hard_way_2():
-    parts = s.split()
-    length = len(parts)
-    tokens = []
-    i = 0
-    in_quotes = 0
-    long_token = ''
-    while i < length:
-        part = parts[i]
-        firstchar = part[0]
-        if not in_quotes:
-            if firstchar in ['"', "'"]:
-                in_quotes = True
-                quotechar = firstchar
-                long_token = part[1:]
-        else:
-            pass
-
-def hard_way():
-    tokens = []
-    if not s:
-        return tokens
-    length = len(s)
-    i = 0
-    while s[i] in ' \t':
-        i += 1
-    was_on_token = False
-    while i < length:
-        on_token = (s[i] not in ' \t')
-        if was_on_token:
-            if on_token:
-                cur += s[i]
-                was_on_token = True
-            else:
-                tokens.append(cur)
-                cur = ''
-                was_on_token = False
-        else:
-            if on_token:
-                cur = s[i]
-                was_on_token = True
-        i += 1
-
 
 def parse(tokens):
     r = {}
@@ -219,8 +171,6 @@ def make_either_rect(item, rx, ry):
     textwidth = get_text_width(label, width)
     textx, texty = get_center(item)
     texty += context['font_half_height']
-    #print('item:', item)
-    #print('text color:', get_text_color(item))
     node = (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(item))
             + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(item),
                                          get_font_family(item), label))
@@ -328,6 +278,4 @@ def main(args):
     print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], '\n'.join(svgobjects)))
 
 if __name__ == '__main__':
-    #for a in sys.argv[1:]:
-    #    print(tokenize(a))
     main(sys.argv[1:])
