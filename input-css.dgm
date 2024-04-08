@@ -6,3 +6,6 @@ oval C Oval center 300 120 size 100 70 color #0080FF
 circle CC center 200 420 radius 50 color #FF8000 url https://www.duckduckgo.com class important
 edge E from A.lr to B color yellow
 edge F from B to C class unimportant
+rect Z " " center 100 300 size 50 50
+diamond D "I'm a Diamond!" center 100 200  size 100 50 class diamondic
+diamond D2 "Another" center 200 200  size 50 50 class diamondic

@@ -15,6 +15,12 @@ TEXT_TEMPLATE = '<text class="text%s" x="%s" y="%s" textLength="%s" fill="%s" fo
 
 CIRCLE_TEMPLATE = '<circle class="node%s" cx="%s" cy="%s" r="%s" fill="%s" />'
 
+DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon class="node%s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
+
+POLYGON_TEMPLATE = '<g transform="translate(%s,%s)"><polygon class="node%s" points="%s" fill="%s" /></g>'
+
+DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
+
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
             'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif',
@@ -112,6 +118,8 @@ def make_object(parsed):
         return make_oval(parsed)
     elif kind == 'circle':
         return make_circle(parsed)
+    elif kind == 'diamond':
+        return make_diamond(parsed)
     elif kind == 'diagram':
         return make_diagram(parsed)
     else:
@@ -174,8 +182,15 @@ def get_text_class_str(item):
         return ' ' + item['text-class']
     return ''
 
-def get_text_width(s, maxwidth):
-    return min(context['font_average_width'] * len(s), maxwidth*.95)
+def get_text_width(s, maxwidth, hint=.95):
+    return min(context['font_average_width'] * len(s), maxwidth*hint)
+
+def scale_points(points, w, h):
+    r = points[:]
+    for i in range(len(r)):
+        r[i] *= w
+        w, h = h, w
+    return ' '.join([to_string(n) for n in r])
 
 def make_either_rect(item, rx, ry):
     label = get_label(item)
@@ -214,6 +229,26 @@ def make_circle(item):
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
     node = (CIRCLE_TEMPLATE % to_strings(css_classes, x, y, r, get_color(item))
+            + TEXT_TEMPLATE % to_strings(text_css_classes, x, texty, textwidth,
+                                         get_text_color(item), get_font_family(item), label))
+    url = get_url(item)
+    if url:
+        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+    return node
+
+def make_diamond(item):
+    label = get_label(item)
+    x, y = item['center']
+    width, height = item['size']
+    textwidth = get_text_width(label, width, .6)
+    texty = y + context['font_half_height']
+    css_classes = get_class_str(item)
+    text_css_classes = get_text_class_str(item)
+    # TODO: why do we need to divide by 4.0? What's going on?
+    # part was the stroke-width; why are the diamonds all stroke-colored?
+    # diamond_points = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
+    points_string = scale_points(DIAMOND_POINTS, width, height)
+    node = (POLYGON_TEMPLATE % to_strings(x, y, css_classes, points_string, get_color(item))
             + TEXT_TEMPLATE % to_strings(text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)

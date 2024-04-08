@@ -1,9 +1,13 @@
 # TODO
 
  __ add some more shapes  04/07/24 17:17:36 EDT
-    __ diamond
     __ cylinder
+    __ polygon
+    __ parallelogram
+    __ path
  __ let the user declare persistent class and text-class (may conflict with edges-first)  04/07/24 23:24:46 EDT
+ __ replace "click" with URL in rollover text  04/07/24 23:42:45 EDT
+ __ add an auto size, making the item just wide enough for its label
  __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
  __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
  __ add URL links to edges, (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT
@@ -13,7 +17,7 @@
  __ add a background, or let the user do so: background color gray  04/07/24 14:26:05 EDT
  __ make the language case-insensitive  04/07/24 13:13:42 EDT
  __ start dealing with stroke, not just fill  04/07/24 19:00:17 EDT
- __ add rollover effets: start with just changing color (or leave this to CSS?)  04/07/24 21:47:39 EDT
+ __ add rollover effects: start with just changing color (or leave this to CSS?)  04/07/24 21:47:39 EDT
  __ simple automatic layout of shapes  04/07/24 21:44:03 EDT
  __ indicate that some items are contained inside other ones  04/07/24 21:42:41 EDT
  __ describe links with A -- B <- C -> D syntax; maybe support ---, -->, etc. too  04/07/24 21:43:28 EDT
@@ -34,3 +38,4 @@
  ++ recognize double-quoted and single-quoted strings as single tokens  04/07/24 14:06:23 EDT d. 04/07/24 21:05:26 EDT
  ++ add URL links to nodes, text (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT d. 04/07/24 21:30:19 EDT
  ++ let the user declare a class for an item (so CSS can affect it)  04/07/24 19:29:54 EDT d. 04/07/24 23:16:49 EDT
+ ++ add diamond  04/07/24 17:17:36 EDT d. 04/08/24 01:04:50 EDT

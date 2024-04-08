@@ -1,6 +1,6 @@
 svg { background-color: #F8FFF0; }
 
-.node { opacity: 1.95; fill: #000060; stroke: orange; }
+.node { opacity: 1.95; fill: #000060; stroke: orange; stroke-width: 3; }
 
 .edge { stroke-width: 17; fill: black; stroke: purple;}
 
@@ -13,3 +13,7 @@ svg { background-color: #F8FFF0; }
 .unimportant.text { fill: gray; }
 
 .unimportant.edge { stroke: #8080A0; }
+
+.node.diamondic { fill: purple; stroke: #FFFF00; stroke-width: 3.0;}
+
+.text.diamondic { fill: red; stroke: black; stroke-width: 1;}

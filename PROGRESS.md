@@ -198,3 +198,30 @@ edge F from B to C class unimportant
 <a xlink:href="https://www.duckduckgo.com" xlink:title="click"><circle class="node important" cx="200" cy="420" r="50" fill="#FF8000" /><text class="text" x="200" y="426" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text></a>
 </svg>
 [23:19:53 gpaci@mac drawing-language]$
+
+[01:01:31 gpaci@mac drawing-language]$ cat input-css.dgm
+diagram Example width 800 height 600 stylesheet colorful.css
+color blue
+rect A "Starting Point" center 100 100 size 100 50  url https://news.ycombinator.com  text-color white
+rrect B "Ending Point" ul 300 300 size 100 150 color green class "unimportant trivial" text-class unimportant
+oval C Oval center 300 120 size 100 70 color #0080FF
+circle CC center 200 420 radius 50 color #FF8000 url https://www.duckduckgo.com class important
+edge E from A.lr to B color yellow
+edge F from B to C class unimportant
+rect Z " " center 100 300 size 50 50
+diamond D "I'm a Diamond!" center 100 200  size 100 50 class diamondic
+diamond D2 "Another" center 200 200  size 50 50 class diamondic
+[01:03:02 gpaci@mac drawing-language]$ python diagram.py input-css.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="colorful.css" type="text/css" />
+<line class="edge" x1="100" y1="100" x2="350" y2="375" stroke="yellow" stroke-width="3" />
+<line class="edge unimportant" x1="350" y1="375" x2="300" y2="120" stroke="gray" stroke-width="3" />
+<a xlink:href="https://news.ycombinator.com" xlink:title="click"><rect class="node" x="50" y="75" width="100" height="50" rx="0" ry="0" fill="blue" /><text class="text" x="100" y="106" textLength="95" fill="white" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Starting Point</text></a>
+<rect class="node unimportant trivial" x="300" y="300" width="100" height="150" rx="10" ry="10" fill="green" /><text class="text unimportant" x="350" y="381" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Ending Point</text>
+<rect class="node" x="250" y="85" width="100" height="70" rx="35" ry="35" fill="#0080FF" /><text class="text" x="300" y="126" textLength="40" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Oval</text>
+<a xlink:href="https://www.duckduckgo.com" xlink:title="click"><circle class="node important" cx="200" cy="420" r="50" fill="#FF8000" /><text class="text" x="200" y="426" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text></a>
+<rect class="node" x="75" y="275" width="50" height="50" rx="0" ry="0" fill="blue" /><text class="text" x="100" y="306" textLength="10" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs"> </text>
+<g transform="translate(100,200)"><polygon class="node diamondic" points="-50 0 0 25 50 0 0 -25" fill="blue" /></g><text class="text" x="100" y="206" textLength="60" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">I'm a Diamond!</text>
+<g transform="translate(200,200)"><polygon class="node diamondic" points="-25 0 0 25 25 0 0 -25" fill="blue" /></g><text class="text" x="200" y="206" textLength="30" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Another</text>
+</svg>
+[01:03:08 gpaci@mac drawing-language]$ # we have diamonds. Finally.
