@@ -115,6 +115,12 @@ to attach, instead of the default of the center; today is not that day.
 The planned syntax for that, `myid.lr`, is currently ignored and treated
 the same as just `myid`.
 
+Every node has CSS class `node`, every edge has CSS class `edge`.
+This is mandatory.  You can, however, add other classes with the
+`class` and `text-class` attributes of edges and nodes. If you want to
+add multiple classes, you *must* list them space-separated inside one
+outer pair of quotes: `class "additionalclass otherclass"`.
+
 ### Arguments and Flags for the program
 
 `python3 diagram.py [filename] [setting=value]*`
@@ -122,6 +128,8 @@ the same as just `myid`.
 You can give it the name of an input file; if you give it `-` or omit
 the filename, it will read from `stdin`. (That makes it easy to use as
 part of shell pipelines.)
+
+Specify the output file with `>`, as Dennis Ritchie intended.
 
 You can give it a bunch of obscure default settings by specifying
 key/value pairs.  The list will change over time, but right now it
