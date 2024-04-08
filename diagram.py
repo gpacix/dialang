@@ -48,8 +48,79 @@ def partition(pred, items):
     return truefor, falsefor
 
 def tokenize(s):
-    # later, respect quotes
-    return s.split()
+    if '"' not in s and "'" not in s:
+        return s.split()
+    # need to do it the hard way...
+    # go until ", split that, then go until closing " and make single token
+    length = len(s)
+    tokens = []
+    acc = ''
+    i = 0
+    #print('s input:', s)
+    while i < length:
+        c = s[i]
+        if c in ['"', "'"]:
+            if acc:
+                tokens += acc.split(' ')
+                #print('a tokens:',tokens)
+                acc = ''
+            i += 1
+            start = i
+            while i < length and s[i] != c:
+                i += 1
+            tokens.append(s[start:i])
+            #print('b tokens:',tokens)
+        else:
+            acc += c
+        i += 1
+    if acc:
+        tokens += acc.split(' ')
+        #print('c tokens:',tokens)
+    return [t for t in tokens if t]
+
+def hard_way_2():
+    parts = s.split()
+    length = len(parts)
+    tokens = []
+    i = 0
+    in_quotes = 0
+    long_token = ''
+    while i < length:
+        part = parts[i]
+        firstchar = part[0]
+        if not in_quotes:
+            if firstchar in ['"', "'"]:
+                in_quotes = True
+                quotechar = firstchar
+                long_token = part[1:]
+        else:
+            pass
+
+def hard_way():
+    tokens = []
+    if not s:
+        return tokens
+    length = len(s)
+    i = 0
+    while s[i] in ' \t':
+        i += 1
+    was_on_token = False
+    while i < length:
+        on_token = (s[i] not in ' \t')
+        if was_on_token:
+            if on_token:
+                cur += s[i]
+                was_on_token = True
+            else:
+                tokens.append(cur)
+                cur = ''
+                was_on_token = False
+        else:
+            if on_token:
+                cur = s[i]
+                was_on_token = True
+        i += 1
+
 
 def parse(tokens):
     r = {}
@@ -144,6 +215,8 @@ def make_either_rect(r, rx, ry):
     textwidth = get_text_width(label, width)
     textx, texty = get_center(r)
     texty += context['font_half_height']
+    #print('r:', r)
+    #print('text color:', get_text_color(r))
     return (RECT_TEMPLATE % to_strings(x, y, width, height, rx, ry, get_color(r))
             + TEXT_TEMPLATE % to_strings(textx, texty, textwidth, get_text_color(r),
                                          get_font_family(r), label))
@@ -228,6 +301,7 @@ def open_file(args):
 def main(args):
     filenameargs = [a for a in args if '=' not in a]
     lines = open_file(filenameargs + ['-']).readlines()
+    lines = [line.rstrip('\r\n') for line in lines]
     update_context(args)
 
     # remove blank lines and comment lines (first non-whitespace char is #):
@@ -242,4 +316,6 @@ def main(args):
     print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], '\n'.join(svgobjects)))
 
 if __name__ == '__main__':
+    #for a in sys.argv[1:]:
+    #    print(tokenize(a))
     main(sys.argv[1:])
