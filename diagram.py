@@ -192,6 +192,9 @@ def scale_points(points, w, h):
         w, h = h, w
     return ' '.join([to_string(n) for n in r])
 
+def entity_encode(s):
+    return s.replace('&', '&amp;').replace('<', '&l;t;').replace('>', '&gt;')
+
 def make_either_rect(item, rx, ry):
     label = get_label(item)
     x, y = get_ul(item)
@@ -206,7 +209,7 @@ def make_either_rect(item, rx, ry):
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+        node = ('<a xlink:href="%s" xlink:title="click">' % entity_encode(url)) + node + '</a>'
     return node
 
 def make_rect(r):
