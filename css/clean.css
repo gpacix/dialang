@@ -1,0 +1,27 @@
+svg { background-color: white; }
+
+.node { opacity: 1.0; fill: #2792c2; stroke: #2792c2; stroke-width: 0; }
+
+.text { fill: #005582; stroke: #005582; font-family: skia,helvetica,sans-serif; }
+
+.edge { stroke-width: 3; fill: #005582; stroke: #005582; }
+
+.edge.thin { stroke-width: 1; }
+.edge.thick { stroke-width: 5; }
+
+
+.c0 { fill: #000000; stroke: #000000; }
+.c1 { fill: #005582; stroke: #005582; }
+.c2 { fill: #2792c2; stroke: #2792c2; }
+.c3 { fill: #81D0E6; stroke: #81D0E6; }
+.c4 { fill: #CCDF79; stroke: #CCDF79; }
+.c5 { fill: #f69f46; stroke: #f69f46; }
+
+.text.c0 { fill: white; stroke: white; }
+.text.c1 { fill: #CCDF79; stroke: #CCDF79; }
+.text.c2 { fill: white; stroke: white; }
+.text.c3 { fill: #005582; stroke: #005582; }
+.text.c4 { fill: #005582; stroke: #005582; }
+.text.c5 { fill: black; stroke: black; }
+
+.invisible { fill: none; stroke: none; }

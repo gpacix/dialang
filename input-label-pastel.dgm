@@ -1,0 +1,12 @@
+diagram Example width 800 height 600 stylesheet pastel.css
+rect L "Just a Label"  center 150 150 size 100 50  class invisible
+rect SP "Starting Point" center 100 100 size 100 50  url https://news.ycombinator.com
+rrect EP "Ending Point" ul 300 300 size 100 150 class c6 text-class c6
+oval Oval center 300 120 size 100 70 class c3 text-class c3
+circle CC center 200 420 radius 50 url https://www.duckduckgo.com class c4 text-class c4
+edge E from SP.lr to EP class c5 text-class c5
+edge F from EP to Oval class thick text-class c4
+rect Z " " center 100 300 size 50 50  class c0 text-class c0
+diamond D "Shine" center 100 200  size 100 50  class c1 text-class c1
+diamond D2 "On" center 200 200  size 50 50  class c5 text-class c5
+edge G from D2 to CC class "c2 thin"

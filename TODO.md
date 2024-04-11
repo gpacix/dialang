@@ -6,7 +6,7 @@
     __ parallelogram
     __ path
  __ let the user declare persistent class and text-class (may conflict with edges-first)  04/07/24 23:24:46 EDT
- __ replace "click" with URL in rollover text  04/07/24 23:42:45 EDT
+ __ replace "click" with URL in rollover text, or add title  04/07/24 23:42:45 EDT
  __ add an auto size, making the item just wide enough for its label
  __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
  __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
@@ -17,6 +17,10 @@
  __ add a background, or let the user do so: background color gray  04/07/24 14:26:05 EDT
  __ make the language case-insensitive  04/07/24 13:13:42 EDT
  __ start dealing with stroke, not just fill  04/07/24 19:00:17 EDT
+ __ add synonyms, like r for radius, c for center  04/10/24 16:37:14 EDT
+ __ seriously consider making labels optional, or maybe: 'id:' and 'id label:' and 'id "long label":' 04/10/24 16:38:17 EDT
+ __ what about optional IDs? could be easy with the above : syntax
+ __ what about Smalltalk-like 'argname: val' syntax?
  __ add rollover effects: start with just changing color (or leave this to CSS?)  04/07/24 21:47:39 EDT
  __ simple automatic layout of shapes  04/07/24 21:44:03 EDT
  __ indicate that some items are contained inside other ones  04/07/24 21:42:41 EDT
@@ -39,3 +43,5 @@
  ++ add URL links to nodes, text (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT d. 04/07/24 21:30:19 EDT
  ++ let the user declare a class for an item (so CSS can affect it)  04/07/24 19:29:54 EDT d. 04/07/24 23:16:49 EDT
  ++ add diamond  04/07/24 17:17:36 EDT d. 04/08/24 01:04:50 EDT
+ ++ entity-encode the URLs before putting in the output  d. 04/10/24 16:36:02 EDT
+ ++ provide "style" option to embed a provided style from css/ directory  d. 04/10/24 23:15:10 EDT

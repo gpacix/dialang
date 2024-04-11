@@ -1,0 +1,30 @@
+svg { background-color: white; }
+
+.node { opacity: 1.0; fill: #CCEEFF; stroke: #CCEEFF; stroke-width: 0; }
+
+.text { fill: #5030B0; stroke: #5030B0; font-family: skia,helvetica,sans-serif; }
+
+.edge { stroke-width: 3; fill: #5030B0; stroke: #5030B0; }
+
+.edge.thin { stroke-width: 1; }
+.edge.thick { stroke-width: 5; }
+
+
+.c0 { fill: #5030B0; stroke: #5030B0; }
+.c1 { fill: #DDDDFF; stroke: #DDDDFF; }
+.c2 { fill: #CCEEFF; stroke: #CCEEFF; }
+.c3 { fill: #DDFFDD; stroke: #DDFFDD; }
+.c4 { fill: #FFFFCC; stroke: #FFFFCC; }
+.c5 { fill: #FFDDFF; stroke: #FFDDFF; }
+.c6 { fill: #FFDDBB; stroke: #FFDDBB; }
+
+.text.c0 { fill: #5030B0; stroke: #5030B0; }
+.text.c1 { fill: #5030B0; stroke: #5030B0; }
+.text.c2 { fill: #5030B0; stroke: #5030B0; }
+.text.c3 { fill: #5030B0; stroke: #5030B0; }
+.text.c4 { fill: #5030B0; stroke: #5030B0; }
+.text.c5 { fill: #5030B0; stroke: #5030B0; }
+.text.c6 { fill: #5030B0; stroke: #5030B0; }
+
+/* invisible must be the last class in the sheet: */
+.invisible { fill: none; stroke: none; }

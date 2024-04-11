@@ -225,3 +225,78 @@ diamond D2 "Another" center 200 200  size 50 50 class diamondic
 <g transform="translate(200,200)"><polygon class="node diamondic" points="-25 0 0 25 25 0 0 -25" fill="blue" /></g><text class="text" x="200" y="206" textLength="30" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Another</text>
 </svg>
 [01:03:08 gpaci@mac drawing-language]$ # we have diamonds. Finally.
+
+04/10/24 --
+
+[23:15:28 gpaci@mac dialang]$ lf *emb*
+-rw-r--r--  1 gpaci  staff  753 Apr 10 23:08 input-pastel-embedded.dgm
+[23:15:33 gpaci@mac dialang]$ cat input-pastel-embedded.dgm 
+diagram Example width 800 height 600 style pastel
+rect L "Just a Label"  center 150 150 size 100 50  class invisible
+rect SP "Starting Point" center 100 100 size 100 50  url https://news.ycombinator.com
+rrect EP "Ending Point" ul 300 300 size 100 150 class c6 text-class c6
+oval Oval center 300 120 size 100 70 class c3 text-class c3
+circle CC center 200 420 radius 50 url https://www.duckduckgo.com class c4 text-class c4
+edge E from SP.lr to EP class c5 text-class c5
+edge F from EP to Oval class thick text-class c4
+rect Z " " center 100 300 size 50 50  class c0 text-class c0
+diamond D "Shine" center 100 200  size 100 50  class c1 text-class c1
+diamond D2 "On" center 200 200  size 50 50  class c5 text-class c5
+edge G from D2 to CC class "c2 thin"[23:15:40 gpaci@mac dialang]$ 
+[23:16:00 gpaci@mac dialang]$ python diagram.py input-pastel-embedded.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style>
+svg { background-color: white; }
+
+.node { opacity: 1.0; fill: #CCEEFF; stroke: #CCEEFF; stroke-width: 0; }
+
+.text { fill: #5030B0; stroke: #5030B0; font-family: skia,helvetica,sans-serif; }
+
+.edge { stroke-width: 3; fill: #5030B0; stroke: #5030B0; }
+
+.edge.thin { stroke-width: 1; }
+.edge.thick { stroke-width: 5; }
+
+
+.c0 { fill: #5030B0; stroke: #5030B0; }
+.c1 { fill: #DDDDFF; stroke: #DDDDFF; }
+.c2 { fill: #CCEEFF; stroke: #CCEEFF; }
+.c3 { fill: #DDFFDD; stroke: #DDFFDD; }
+.c4 { fill: #FFFFCC; stroke: #FFFFCC; }
+.c5 { fill: #FFDDFF; stroke: #FFDDFF; }
+.c6 { fill: #FFDDBB; stroke: #FFDDBB; }
+
+.text.c0 { fill: #5030B0; stroke: #5030B0; }
+.text.c1 { fill: #5030B0; stroke: #5030B0; }
+.text.c2 { fill: #5030B0; stroke: #5030B0; }
+.text.c3 { fill: #5030B0; stroke: #5030B0; }
+.text.c4 { fill: #5030B0; stroke: #5030B0; }
+.text.c5 { fill: #5030B0; stroke: #5030B0; }
+.text.c6 { fill: #5030B0; stroke: #5030B0; }
+
+/* invisible must be the last class in the sheet: */
+.invisible { fill: none; stroke: none; }
+</style>
+
+<line class="edge c5" x1="100" y1="100" x2="350" y2="375" stroke="gray" stroke-width="3" />
+<line class="edge thick" x1="350" y1="375" x2="300" y2="120" stroke="gray" stroke-width="3" />
+<line class="edge c2 thin" x1="200" y1="200" x2="200" y2="420" stroke="gray" stroke-width="3" />
+<rect class="node invisible" x="100" y="125" width="100" height="50" rx="0" ry="0" fill="gray" /><text class="text" x="150" y="156" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Just a Label</text>
+<a xlink:href="https://news.ycombinator.com" xlink:title="click"><rect class="node" x="50" y="75" width="100" height="50" rx="0" ry="0" fill="gray" /><text class="text" x="100" y="106" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Starting Point</text></a>
+<rect class="node c6" x="300" y="300" width="100" height="150" rx="10" ry="10" fill="gray" /><text class="text c6" x="350" y="381" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Ending Point</text>
+<rect class="node c3" x="250" y="85" width="100" height="70" rx="35" ry="35" fill="gray" /><text class="text c3" x="300" y="126" textLength="40" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Oval</text>
+<a xlink:href="https://www.duckduckgo.com" xlink:title="click"><circle class="node c4" cx="200" cy="420" r="50" fill="gray" /><text class="text c4" x="200" y="426" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text></a>
+<rect class="node c0" x="75" y="275" width="50" height="50" rx="0" ry="0" fill="gray" /><text class="text c0" x="100" y="306" textLength="10" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs"> </text>
+<g transform="translate(100,200)"><polygon class="node c1" points="-50 0 0 25 50 0 0 -25" fill="gray" /></g><text class="text c1" x="100" y="206" textLength="50" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Shine</text>
+<g transform="translate(200,200)"><polygon class="node c5" points="-25 0 0 25 25 0 0 -25" fill="gray" /></g><text class="text c5" x="200" y="206" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">On</text>
+</svg>
+[23:16:20 gpaci@mac dialang]$ lf css/
+total 32
+-rw-r--r--   1 gpaci  staff    35 Apr  7 22:48 default.css
+-rw-r--r--   1 gpaci  staff   507 Apr  8 00:55 colorful.css
+-rw-r--r--   1 gpaci  staff   859 Apr 10 22:12 clean.css
+-rw-r--r--   1 gpaci  staff  1009 Apr 10 22:26 pastel.css
+drwxr-xr-x   6 gpaci  staff   192 Apr 10 22:30 .
+drwxr-xr-x  75 gpaci  staff  2400 Apr 10 23:15 ..
+[23:16:39 gpaci@mac dialang]$
+

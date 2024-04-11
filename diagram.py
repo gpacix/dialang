@@ -3,9 +3,13 @@ import sys
 
 SVG_TEMPLATE='''\
 <svg width="%s" height="%s" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="%s" type="text/css" />
+%s
 %s
 </svg>'''
+
+STYLESHEET_TEMPLATE='<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="%s" type="text/css" />'
+
+STYLE_TEMPLATE='<style>\n%s</style>\n'
 
 RECT_TEMPLATE='<rect class="node%s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
 
@@ -24,7 +28,7 @@ DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
             'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif',
-            'css_href': 'default.css', }
+            'css_href': '', 'style': 'default'}
           #, 'edge_color': None, 'node_color': None
 
 objects = { }
@@ -95,7 +99,7 @@ def parse(tokens):
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
         elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius',
-                               'url', 'stylesheet', 'class', 'text-class']:
+                               'url', 'stylesheet', 'style', 'class', 'text-class']:
             r[current_token] = tokens[i+1]
             i += 2
         else:
@@ -295,6 +299,20 @@ def make_diagram(diagram):
     context['diagram_height'] = diagram['height']
     if 'stylesheet' in diagram:
         context['css_href'] = diagram['stylesheet']
+    if 'style' in diagram:
+        context['style'] = diagram['style']
+
+def get_style_fragment():
+    if 'css_href' in context and context['css_href']:
+        return STYLESHEET_TEMPLATE % entity_encode(context['css_href'])
+    style = ''
+    try:
+        sfile = open('css/' + context['style'] + '.css')
+        style = sfile.read()
+        close(sfile)
+    except:
+        pass
+    return STYLE_TEMPLATE % style
 
 def update_context(args):
     errors = []
@@ -333,7 +351,8 @@ def main(args):
 
     svgobjects = [make_object(thing) for thing in edges + nonedges]
     svgobjects = [ob for ob in svgobjects if ob]
-    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], context['css_href'],
+    # either it has an external stylesheet, or it specified a style (if both, stylesheet wins):
+    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], get_style_fragment(),
                           '\n'.join(svgobjects)))
 
 if __name__ == '__main__':
