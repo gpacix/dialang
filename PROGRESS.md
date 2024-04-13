@@ -300,3 +300,38 @@ drwxr-xr-x   6 gpaci  staff   192 Apr 10 22:30 .
 drwxr-xr-x  75 gpaci  staff  2400 Apr 10 23:15 ..
 [23:16:39 gpaci@mac dialang]$
 
+[15:00:18 gpaci@mac dialang]$ cat input-label-clean.dgm
+diagram Example width 800 height 600 stylesheet clean.css
+rect L "Just a Label"  center 150 150 size 100 50  class invisible
+rect SP "Starting Point" center 100 100 size 100 50  url https://news.ycombinator.com class c2 text-class c2
+rrect EP "Ending Point" ul 300 300 size 100 150 class c2 text-class c2
+oval Oval center 300 120 size 100 70 class c3 text-class c3
+circle CC center 200 420 radius 50 url https://www.duckduckgo.com class c4 text-class c4
+edge E from SP.lr to EP class c5 text-class c5
+edge F from EP to Oval class thick text-class c4
+rect Z " " center 100 300 size 50 50  class c0 text-class c0
+diamond D "Shine" center 100 200  size 100 50  class c1 text-class c1
+diamond D2 "On" center 200 200  size 50 50  class c1 text-class c1
+edge G from D2 to CC class "c2 thin"
+[15:00:30 gpaci@mac dialang]$
+
+$ date
+Sat Apr 13 14:59:54 EDT 2024
+[14:59:54 gpaci@mac ~]$
+
+[15:08:06 gpaci@mac dialang]$ python diagram.py input-label-clean.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="clean.css" type="text/css" />
+<line id="E" class="edge c5" x1="100" y1="100" x2="350" y2="375" stroke="gray" stroke-width="3" />
+<line id="F" class="edge thick" x1="350" y1="375" x2="300" y2="120" stroke="gray" stroke-width="3" />
+<line id="G" class="edge c2 thin" x1="200" y1="200" x2="200" y2="420" stroke="gray" stroke-width="3" />
+<rect id="L" class="node invisible" x="100" y="125" width="100" height="50" rx="0" ry="0" fill="gray" /><text id="L-label" class="text" x="150" y="156" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Just a Label</text>
+<a xlink:href="https://news.ycombinator.com" xlink:title="click"><rect id="SP" class="node c2" x="50" y="75" width="100" height="50" rx="0" ry="0" fill="gray" /><text id="SP-label" class="text c2" x="100" y="106" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Starting Point</text></a>
+<rect id="EP" class="node c2" x="300" y="300" width="100" height="150" rx="10" ry="10" fill="gray" /><text id="EP-label" class="text c2" x="350" y="381" textLength="95" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Ending Point</text>
+<rect id="Oval" class="node c3" x="250" y="85" width="100" height="70" rx="35" ry="35" fill="gray" /><text id="Oval-label" class="text c3" x="300" y="126" textLength="40" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Oval</text>
+<a xlink:href="https://www.duckduckgo.com" xlink:title="click"><circle id="CC" class="node c4" cx="200" cy="420" r="50" fill="gray" /><text id="CC-label" class="text c4" x="200" y="426" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">CC</text></a>
+<rect id="Z" class="node c0" x="75" y="275" width="50" height="50" rx="0" ry="0" fill="gray" /><text id="Z-label" class="text c0" x="100" y="306" textLength="10" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs"> </text>
+<g transform="translate(100,200)"><polygon id="D" class="node c1" points="-50 0 0 25 50 0 0 -25" fill="gray" /></g><text id="D-label" class="text c1" x="100" y="206" textLength="50" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Shine</text>
+<g transform="translate(200,200)"><polygon id="D2" class="node c1" points="-25 0 0 25 25 0 0 -25" fill="gray" /></g><text id="D2-label" class="text c1" x="200" y="206" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">On</text>
+</svg>
+[15:08:43 gpaci@mac dialang]$

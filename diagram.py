@@ -11,19 +11,21 @@ STYLESHEET_TEMPLATE='<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet"
 
 STYLE_TEMPLATE='<style>\n%s</style>\n'
 
-RECT_TEMPLATE='<rect class="node%s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
+RECT_TEMPLATE='<rect id="%s" class="node%s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
 
-LINE_TEMPLATE='<line class="edge%s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
+LINE_TEMPLATE='<line id="%s" class="edge%s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
-TEXT_TEMPLATE = '<text class="text%s" x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+TEXT_TEMPLATE = '<text id="%s" class="text%s" x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
-CIRCLE_TEMPLATE = '<circle class="node%s" cx="%s" cy="%s" r="%s" fill="%s" />'
+CIRCLE_TEMPLATE = '<circle id="%s" class="node%s" cx="%s" cy="%s" r="%s" fill="%s" />'
 
-DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon class="node%s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
+DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon id="%s" class="node%s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
 
-POLYGON_TEMPLATE = '<g transform="translate(%s,%s)"><polygon class="node%s" points="%s" fill="%s" /></g>'
+POLYGON_TEMPLATE = '<g transform="translate(%s,%s)"><polygon id="%s" class="node%s" points="%s" fill="%s" /></g>'
 
 DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
+
+PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
@@ -129,6 +131,12 @@ def make_object(parsed):
     else:
         return None
 
+def get_id(item):
+    # we 100% fully expect to have an ID, but...
+    if 'id' in item:
+        return item['id']
+    return 'unknown' # this will not be unique
+
 def get_ul(r):
     if 'ul' in r:
         return r['ul']
@@ -199,6 +207,23 @@ def scale_points(points, w, h):
 def entity_encode(s):
     return s.replace('&', '&amp;').replace('<', '&l;t;').replace('>', '&gt;')
 
+def id_encode(s):
+    '''Encode s as an XML ID, meaning it matches: [A-Za-z_][A-Za-z_0-9\\.-]*,
+       by replacing illegal characters with _ ; guaranteed to return a string'''
+    if not s:
+        return ''
+    id = ''
+    for i in range(len(s)):
+        c = s[i]
+        if not (c.isalnum() or c in '_-.'):
+            c = '_'
+        id += c
+    if id[0] != '_' and  not id[0].isalpha():
+        id[0] = '_'
+    else:
+        id = '_'
+    return id
+
 def make_either_rect(item, rx, ry):
     label = get_label(item)
     x, y = get_ul(item)
@@ -208,8 +233,8 @@ def make_either_rect(item, rx, ry):
     texty += context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    node = (RECT_TEMPLATE % to_strings(css_classes, x, y, width, height, rx, ry, get_color(item))
-            + TEXT_TEMPLATE % to_strings(text_css_classes, textx, texty, textwidth,
+    node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, get_color(item))
+            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, textx, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
@@ -235,8 +260,8 @@ def make_circle(item):
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    node = (CIRCLE_TEMPLATE % to_strings(css_classes, x, y, r, get_color(item))
-            + TEXT_TEMPLATE % to_strings(text_css_classes, x, texty, textwidth,
+    node = (CIRCLE_TEMPLATE % to_strings(get_id(item), css_classes, x, y, r, get_color(item))
+            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
@@ -255,8 +280,8 @@ def make_diamond(item):
     # part was the stroke-width; why are the diamonds all stroke-colored?
     # diamond_points = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
     points_string = scale_points(DIAMOND_POINTS, width, height)
-    node = (POLYGON_TEMPLATE % to_strings(x, y, css_classes, points_string, get_color(item))
-            + TEXT_TEMPLATE % to_strings(text_css_classes, x, texty, textwidth,
+    node = (POLYGON_TEMPLATE % to_strings(x, y, get_id(item), css_classes, points_string, get_color(item))
+            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
@@ -292,7 +317,7 @@ def make_edge(edge):
     x1, y1 = get_start(edge)
     x2, y2 = get_end(edge)
     css_classes = get_class_str(edge)
-    return LINE_TEMPLATE % to_strings(css_classes, x1, y1, x2, y2, color, width)
+    return LINE_TEMPLATE % to_strings(get_id(edge), css_classes, x1, y1, x2, y2, color, width)
 
 def make_diagram(diagram):
     context['diagram_width']  = diagram['width']
