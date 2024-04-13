@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import math
 
 SVG_TEMPLATE='''\
 <svg width="%s" height="%s" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -21,9 +22,11 @@ CIRCLE_TEMPLATE = '<circle id="%s" class="node%s" cx="%s" cy="%s" r="%s" fill="%
 
 DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon id="%s" class="node%s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
 
-POLYGON_TEMPLATE = '<g transform="translate(%s,%s)"><polygon id="%s" class="node%s" points="%s" fill="%s" /></g>'
+POLYGON_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s)"><polygon id="%s" class="node%s" points="%s" fill="%s" /></g>'
 
 DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
+
+ARROWHEAD_POINTS = [ -0.5, 0,  -0.5, -0.5,  0, 0,  -0.5, 0.5 ]
 
 PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
 
@@ -280,7 +283,8 @@ def make_diamond(item):
     # part was the stroke-width; why are the diamonds all stroke-colored?
     # diamond_points = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
     points_string = scale_points(DIAMOND_POINTS, width, height)
-    node = (POLYGON_TEMPLATE % to_strings(x, y, get_id(item), css_classes, points_string, get_color(item))
+    rotation = 0
+    node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), css_classes, points_string, get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
@@ -317,7 +321,18 @@ def make_edge(edge):
     x1, y1 = get_start(edge)
     x2, y2 = get_end(edge)
     css_classes = get_class_str(edge)
-    return LINE_TEMPLATE % to_strings(get_id(edge), css_classes, x1, y1, x2, y2, color, width)
+    line = LINE_TEMPLATE % to_strings(get_id(edge), css_classes, x1, y1, x2, y2, color, width)
+    # initially, just stick it in the middle of the edge, so we can always see it
+    # need the slope to figure out the rotation for the arrowhead:
+    slope = (y2 - y1) / (x2 - x1)
+    # use the polygon template:
+    ahwidth, ahheight = 30, 20
+    points_string = scale_points(ARROWHEAD_POINTS, ahwidth, ahheight)
+    rotation = get_angle(x1, y1, x2, y2)
+    x = x1*.1 + x2*.9
+    y = y1*.1 + y2*.9
+    arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', css_classes, points_string, get_color(edge))
+    return line + '\n' + arrowhead
 
 def make_diagram(diagram):
     context['diagram_width']  = diagram['width']
@@ -338,6 +353,11 @@ def get_style_fragment():
     except:
         pass
     return STYLE_TEMPLATE % style
+
+def get_angle(x1, y1, x2, y2):
+    if x1 == x2:
+        return 90 ## could be -90, right?
+    return math.atan2(y2 - y1, x2 - x1) * 180 / math.pi
 
 def update_context(args):
     errors = []

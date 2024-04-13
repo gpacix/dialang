@@ -4,6 +4,7 @@
     __ cylinder
     __ polygon
     __ parallelogram
+    __ cloud
     __ path
  __ label placement options, possibly as a separate label element 04/11/24 21:42:42 EDT
  __ multi-line text (\n) 04/11/24 21:42:43 EDT
