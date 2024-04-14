@@ -2,20 +2,24 @@
 
 I want to be able to type in things like this:
 ```
-diagram Example width 800 height 600 stylesheet colorful.css
-color blue
+diagram Example width 800 height 600 stylesheet css/default.css
+color #80C0FF
 rect A "Starting Point" center 100 100 size 100 50  url https://news.ycombinator.com  text-color white
 rrect B "Ending Point" ul 300 300 size 100 150 color green class "unimportant trivial" text-class unimportant
 oval C Oval center 300 120 size 100 70 color #0080FF
 circle CC center 200 420 radius 50 color #FF8000 url https://www.duckduckgo.com class important
-edge E from A.lr to B color yellow
+edge E from A.lr to B color darkorange
 edge F from B to C class unimportant
 rect Z " " center 100 300 size 50 50
-diamond D "I'm a Diamond!" center 100 200  size 100 50 class diamondic
-diamond D2 "Another" center 200 200  size 50 50 class diamondic
+diamond D "Shine" center 100 200  size 100 50 class c3
+diamond D2 "On" center 200 200  size 50 50 class c4
 ```
 
-...and get an SVG out.  So I traded a Sunday for that ability.  This is the result.
+...and get an SVG out:
+
+![the result](readme.svg "Title Text")
+
+So I traded a Sunday for that ability.  This is the result.
 
 ## Quick Start
 
