@@ -12,15 +12,15 @@ STYLESHEET_TEMPLATE='<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet"
 
 STYLE_TEMPLATE='<style>\n%s</style>\n'
 
-RECT_TEMPLATE='<rect id="%s" class="node%s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
+RECT_TEMPLATE='<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
 
-LINE_TEMPLATE='<line id="%s" class="edge%s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
+LINE_TEMPLATE='<line id="%s" class="edge %s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
-TEXT_TEMPLATE = '<text id="%s" class="text%s" x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+TEXT_TEMPLATE = '<text id="%s" class="text %s" x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
-CIRCLE_TEMPLATE = '<circle id="%s" class="node%s" cx="%s" cy="%s" r="%s" fill="%s" />'
+CIRCLE_TEMPLATE = '<circle id="%s" class="node %s" cx="%s" cy="%s" r="%s" fill="%s" />'
 
-DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon id="%s" class="node%s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
+DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon id="%s" class="node %s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
 
 POLYGON_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s)"><polygon id="%s" class="%s" points="%s" fill="%s" /></g>'
 
@@ -29,6 +29,21 @@ DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
 ARROWHEAD_POINTS = [ -1, 0,  -1, -0.5,  0, 0,  -1, 0.5 ]
 
 PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
+
+# This image is 118 x 80
+# x y  xscale yscale id class fill stroke
+CLOUD_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-56,-38)">
+<path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:5px"
+       d="M72,19c13.117,0,23.809,10.578,23.996,23.648c-0.02,0.266-0.035,0.535-0.035,0.75
+       c0,3.809,2.688,7.09,6.422,7.844 C107.957,52.363,112,57.309,112,63c0,6.617-5.383,12-12,12
+       H14.508c-0.379-0.125-0.773-0.223-1.176-0.289C5.605,73.406,0,67.801,0,59c0-8.824,7.176-16,16-16
+       a 15 15 0 1 1 ,20-23  a 15 15 0 1 1, 36.5 -1" /></g></g>'''
+
+# This image is 52 x 68
+# x y  xscale yscale id class fill stroke
+CYLINDER_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-26,-34)">
+<path id="%s" class="%s" fill="%s" stroke="%s" style="stroke-width:3px"
+       d="M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0" /></g></g>'''
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
@@ -129,6 +144,10 @@ def make_object(parsed):
         return make_circle(parsed)
     elif kind == 'diamond':
         return make_diamond(parsed)
+    elif kind == 'cloud':
+        return make_cloud(parsed)
+    elif kind == 'cylinder':
+        return make_cylinder(parsed)
     elif kind == 'diagram':
         return make_diagram(parsed)
     else:
@@ -292,6 +311,40 @@ def make_diamond(item):
     points_string = scale_points(DIAMOND_POINTS, width, height)
     rotation = 0
     node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), 'node ' + css_classes, points_string, get_color(item))
+            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
+                                         get_text_color(item), get_font_family(item), label))
+    url = get_url(item)
+    if url:
+        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+    return node
+
+def make_cloud(item):
+    label = get_label(item)
+    x, y = item['center']
+    width, height = item['size']
+    xscale, yscale = width / 118, height / 80
+    textwidth = get_text_width(label, width, .6)
+    texty = y + 2.5*context['font_half_height']
+    css_classes = get_class_str(item)
+    text_css_classes = get_text_class_str(item)
+    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
+            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
+                                         get_text_color(item), get_font_family(item), label))
+    url = get_url(item)
+    if url:
+        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+    return node
+
+def make_cylinder(item):
+    label = get_label(item)
+    x, y = item['center']
+    width, height = item['size']
+    xscale, yscale = width / 42, height / 34
+    textwidth = get_text_width(label, width, .6)
+    texty = y + 2.5*context['font_half_height'] ## TODO: adjust this
+    css_classes = get_class_str(item)
+    text_css_classes = get_text_class_str(item)
+    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
