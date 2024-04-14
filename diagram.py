@@ -22,11 +22,11 @@ CIRCLE_TEMPLATE = '<circle id="%s" class="node%s" cx="%s" cy="%s" r="%s" fill="%
 
 DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon id="%s" class="node%s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
 
-POLYGON_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s)"><polygon id="%s" class="node%s" points="%s" fill="%s" /></g>'
+POLYGON_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s)"><polygon id="%s" class="%s" points="%s" fill="%s" /></g>'
 
 DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
 
-ARROWHEAD_POINTS = [ -0.5, 0,  -0.5, -0.5,  0, 0,  -0.5, 0.5 ]
+ARROWHEAD_POINTS = [ -1, 0,  -1, -0.5,  0, 0,  -1, 0.5 ]
 
 PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
 
@@ -146,6 +146,13 @@ def get_ul(r):
     c = r['center']
     s = r['size']
     return (c[0]-s[0]/2.0, c[1]-s[1]/2.0)
+
+def get_lr(r):
+    if 'lr' in r:
+        return r['lr']
+    c = r['center']
+    s = r['size']
+    return (c[0]+s[0]/2.0, c[1]+s[1]/2.0)
 
 def get_center(r):
     if 'center' in r:
@@ -284,7 +291,7 @@ def make_diamond(item):
     # diamond_points = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
     points_string = scale_points(DIAMOND_POINTS, width, height)
     rotation = 0
-    node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), css_classes, points_string, get_color(item))
+    node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), 'node ' + css_classes, points_string, get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
@@ -302,36 +309,100 @@ def is_edge(obj):
 
 def get_start(edge):
     sourceid, pos = split_at_last(edge['from'], '.')
-    source = objects[sourceid]
-    return get_center(source)
+    return objects[sourceid]
 
 def get_end(edge):
     destid, pos = split_at_last(edge['to'], '.')
-    dest = objects[destid]
-    return get_center(dest)
+    return objects[destid]
 
 def get_width(edge):
     if 'width' in edge:
         return edge['width']
     return context['edge_width']
 
+def find_nearest_port(dest, source):
+    "Return a port (e.g. ul, lc) on dest that faces source"
+    dc = get_center(dest)
+    sc = get_center(source)
+    # we want the angle FROM dest, since it's easier to think about:
+    angle = math.atan2(sc[1] - dc[1], sc[0] - dc[0]) * 180 / math.pi
+    # 0 is to the right, negative is counter-clockwise, positive is clockwise
+    # each port gets 360/8 = 45 degrees, so mr is -22.5 to 22.5
+    angle_i = int((-angle + 180 + 22.5) / 45)
+    #print(angle, angle_i)
+    #sys.exit(0)
+    return ['ml', 'll', 'lc', 'lr', 'mr', 'ur', 'uc', 'ul', 'ml'][angle_i]
+
+def get_port_pos(item, port):
+    "Specify port as {uml}{lcr}"
+    v, h = port[0], port[1]
+    if v == 'u':
+        y = get_ul(item)[1]
+    elif v == 'l':
+        y = get_lr(item)[1]
+    else: # v == 'm':
+        y = get_center(item)[1]
+    if h == 'l':
+        x = get_ul(item)[0]
+    elif h == 'r':
+        x = get_lr(item)[0]
+    else: # h == 'c'
+        x = get_center(item)[0]
+    return x, y
+
+def length(x1, y1, x2, y2):
+    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+
+def shrink_to(newlength, x1, y1, x2, y2):
+    distance = length(x1, y1, x2, y2)
+    factor = 1 - (newlength / distance)
+    x3 = x2*(1-factor) + x1*factor
+    y3 = y2*(1-factor) + y1*factor
+    return x3, y3
+
+def ah_pos_circle(source, dest):
+    '''Determine where the point of the arrowhead is when dest is a circle'''
+    x1, y1 = get_center(source)
+    x2, y2 = get_center(dest)
+    r = to_number(dest['radius'])
+    distance = length(x1, y1, x2, y2)
+    factor = r / distance
+    x = x2*(1-factor) + x1*factor
+    y = y2*(1-factor) + y1*factor
+    # figure out new end for edge: assume thickness of 5 (eh)
+    x3, y3 = shrink_to(distance - (r + 5), x1, y1, x2, y2)
+    return x, y, x3, y3
+
+def arrowhead_position(source, dest):
+    # also include where the edge's line should terminate
+    kind = dest['name']
+    if kind == 'circle':
+        return ah_pos_circle(source, dest)
+    x1, y1 = get_center(source)
+    # pick a port: ul, ml, ll, uc, mc, lc, ur, mr, lr
+    port = find_nearest_port(dest, source)
+    x2, y2 = get_port_pos(dest, port)
+    distance = length(x1, y1, x2, y2)
+    distance1 = distance - 5
+    x3, y3 = shrink_to(distance1, x1, y1, x2, y2)
+    return x2, y2, x3, y3
+
+
 def make_edge(edge):
     color = get_color(edge)
     width = get_width(edge)
-    x1, y1 = get_start(edge)
-    x2, y2 = get_end(edge)
+    source = get_start(edge)
+    dest = get_end(edge)
+    x1, y1 = get_center(source)
+    x2, y2 = get_center(dest)
     css_classes = get_class_str(edge)
-    line = LINE_TEMPLATE % to_strings(get_id(edge), css_classes, x1, y1, x2, y2, color, width)
-    # initially, just stick it in the middle of the edge, so we can always see it
-    # need the slope to figure out the rotation for the arrowhead:
-    slope = (y2 - y1) / (x2 - x1)
+    x, y, xe, ye = arrowhead_position(source, dest)
+    line = LINE_TEMPLATE % to_strings(get_id(edge), css_classes, x1, y1, xe, ye, color, width)
     # use the polygon template:
-    ahwidth, ahheight = 30, 20
-    points_string = scale_points(ARROWHEAD_POINTS, ahwidth, ahheight)
+    ah_length, ah_width = 20, 20
+    points_string = scale_points(ARROWHEAD_POINTS, ah_length, ah_width)
     rotation = get_angle(x1, y1, x2, y2)
-    x = x1*.1 + x2*.9
-    y = y1*.1 + y2*.9
-    arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', css_classes, points_string, get_color(edge))
+    arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', 'edge ' + css_classes, points_string, get_color(edge))
     return line + '\n' + arrowhead
 
 def make_diagram(diagram):
@@ -356,7 +427,7 @@ def get_style_fragment():
 
 def get_angle(x1, y1, x2, y2):
     if x1 == x2:
-        return 90 ## could be -90, right?
+        return math.copysign(90, y2 - y1)
     return math.atan2(y2 - y1, x2 - x1) * 180 / math.pi
 
 def update_context(args):

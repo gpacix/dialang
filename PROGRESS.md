@@ -335,3 +335,44 @@ Sat Apr 13 14:59:54 EDT 2024
 <g transform="translate(200,200)"><polygon id="D2" class="node c1" points="-25 0 0 25 25 0 0 -25" fill="gray" /></g><text id="D2-label" class="text c1" x="200" y="206" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">On</text>
 </svg>
 [15:08:43 gpaci@mac dialang]$
+
+
+[20:57:13 gpaci@mac dialang]$ cat many-edges-rects.dgm
+diagram Many-edges width 800 height 600 stylesheet css/clean.css
+rect C "Center" center 400 300 size 100 100 class c2
+rect R1 "#1" center 600 300 size 100 60  color #0000FF40
+rect R2 "#2" center 600 200 size 100 60  color #00FFFF40
+rect R3 "#3" center 100 100 size 100 62  color #00FF0040
+rect R4 "#4" center 500 60 size 100 60  color #FFFF0040
+rect R5 "#5" center 390 100 size 100 60  color #FF000040
+rect R6 "#6" center 100 500 size 100 60  color #FF00FF40
+edge a1 from C to R1
+edge a2 from C to R2
+edge a3 from C to R3
+edge a4 from C to R4
+edge a5 from C to R5
+edge a6 from C to R6
+[20:57:37 gpaci@mac dialang]$ python diagram.py many-edges-rects.dgm
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="css/clean.css" type="text/css" />
+<line id="a1" class="edge" x1="400" y1="300" x2="545" y2="300" stroke="gray" stroke-width="3" />
+<g transform="translate(550,300) rotate(0)"><polygon id="a1-he" class="edge " points="-20 0 -20 -10 0 0 -20 10" fill="gray" /></g>
+<line id="a2" class="edge" x1="400" y1="300" x2="545.469084" y2="232.114427" stroke="gray" stroke-width="3" />
+<g transform="translate(550,230) rotate(-26.565051)"><polygon id="a2-he" class="edge " points="-20 0 -20 -10 0 0 -20 10" fill="gray" /></g>
+<line id="a3" class="edge" x1="400" y1="300" x2="154.142322" y2="133.800209" stroke="gray" stroke-width="3" />
+<g transform="translate(150,131) rotate(-146.309932)"><polygon id="a3-he" class="edge " points="-20 0 -20 -10 0 0 -20 10" fill="gray" /></g>
+<line id="a4" class="edge" x1="400" y1="300" x2="448.841897" y2="94.864031" stroke="gray" stroke-width="3" />
+<g transform="translate(450,90) rotate(-67.380135)"><polygon id="a4-he" class="edge " points="-20 0 -20 -10 0 0 -20 10" fill="gray" /></g>
+<line id="a5" class="edge" x1="400" y1="300" x2="390.293610" y2="134.991372" stroke="gray" stroke-width="3" />
+<g transform="translate(390,130) rotate(-92.862405)"><polygon id="a5-he" class="edge " points="-20 0 -20 -10 0 0 -20 10" fill="gray" /></g>
+<line id="a6" class="edge" x1="400" y1="300" x2="154.134633" y2="467.188450" stroke="gray" stroke-width="3" />
+<g transform="translate(150,470) rotate(146.309932)"><polygon id="a6-he" class="edge " points="-20 0 -20 -10 0 0 -20 10" fill="gray" /></g>
+<rect id="C" class="node c2" x="350" y="250" width="100" height="100" rx="0" ry="0" fill="gray" /><text id="C-label" class="text" x="400" y="306" textLength="60" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">Center</text>
+<rect id="R1" class="node" x="550" y="270" width="100" height="60" rx="0" ry="0" fill="#0000FF40" /><text id="R1-label" class="text" x="600" y="306" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">#1</text>
+<rect id="R2" class="node" x="550" y="170" width="100" height="60" rx="0" ry="0" fill="#00FFFF40" /><text id="R2-label" class="text" x="600" y="206" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">#2</text>
+<rect id="R3" class="node" x="50" y="69" width="100" height="62" rx="0" ry="0" fill="#00FF0040" /><text id="R3-label" class="text" x="100" y="106" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">#3</text>
+<rect id="R4" class="node" x="450" y="30" width="100" height="60" rx="0" ry="0" fill="#FFFF0040" /><text id="R4-label" class="text" x="500" y="66" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">#4</text>
+<rect id="R5" class="node" x="340" y="70" width="100" height="60" rx="0" ry="0" fill="#FF000040" /><text id="R5-label" class="text" x="390" y="106" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">#5</text>
+<rect id="R6" class="node" x="50" y="470" width="100" height="60" rx="0" ry="0" fill="#FF00FF40" /><text id="R6-label" class="text" x="100" y="506" textLength="20" fill="black" font-family="helvetica,arial,sans-serif" text-anchor="middle" lengthAdjust="spacingAndGlyphs">#6</text>
+</svg>
+[20:57:46 gpaci@mac dialang]$

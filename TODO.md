@@ -17,6 +17,12 @@
  __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
  __ add URL links to edges, (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT
  __ add arrows to the edges (this will be tricky)  04/07/24 21:05:12 EDT
+    ++ get the angle right
+    ++ position them 90% along the edge at first
+    ++ position them correctly for circles 04/13/24 18:23:41 EDT  d. 04/13/24 20:07:20 EDT
+    ++ position them correctly for rects (and rrects) 04/13/24 18:23:43 EDT  d. 04/13/24 20:37:30 EDT
+    __ position them correctly for diamonds
+    __ position them correctly for ovals
  __ figure out good syntax for no label 04/07/24 19:30:16 EDT
  __ respect the lr/ul positions for edge start/end  04/07/24 16:25:26 EDT
  __ add a background, or let the user do so: background color gray  04/07/24 14:26:05 EDT
