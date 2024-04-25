@@ -1,15 +1,14 @@
 # TODO
 
  __ add some more shapes  04/07/24 17:17:36 EDT
-    __ cylinder
+    __ hexagon
     __ polygon
     __ parallelogram
-    __ cloud
     __ path
  __ label placement options, possibly as a separate label element 04/11/24 21:42:42 EDT
  __ multi-line text (\n) 04/11/24 21:42:43 EDT
  __ make label automatically pick up the class from its container  04/11/24 21:43:23 EDT
- __ add "created by" comment; optionally include (entity-encoded) source code  04/11/24 21:44:40 EDT
+ __ make including source code optional  04/11/24 21:44:40 EDT
  __ let the user declare persistent class and text-class (may conflict with edges-first)  04/07/24 23:24:46 EDT
  __ replace "click" with URL in rollover text, or add title  04/07/24 23:42:45 EDT
  __ add an auto size, making the item just wide enough for its label
@@ -39,8 +38,10 @@
  __ write up a convention for what should be in stylesheets; maybe include bold and italic?  04/10/24 23:25:09 EDT
     we already intend to provide classes c0-c5, plus corresponding legible text classes
  __ multi-edges, like the T edges in t-edges.dgm  04/11/24 22:04:24 EDT
+ __ rotated text  04/11/24 22:04:24 EDT
  __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
-
+ __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
+ __ add z or layer coordinate; make edges default to 0, nodes default to 1  04/24/24 20:43:50 EDT
 
 # DONE
  ++ take a line and turn it into a dict  04/07/24 13:27:43 EDT  d. 04/07/24 13:47:25 EDT
@@ -60,6 +61,9 @@
  ++ entity-encode the URLs before putting in the output  d. 04/10/24 16:36:02 EDT
  ++ provide "style" option to embed a provided style from css/ directory  d. 04/10/24 23:15:10 EDT
  ++ include the ID as the element ID in the SVG, so it can be styled  04/11/24 21:41:56 EDT d. 04/13/24 15:09:50 EDT
+ ++ add cloud  04/07/24 17:17:36 EDT  d. 04/14/24 00:30:00 EDT
+ ++ add cylinder  04/07/24 17:17:36 EDT  d. 04/14/24 00:30:00 EDT
+ ++ add "created by" comment; optionally include (entity-encoded) source code  04/11/24 21:44:40 EDT d. 04/24/24 21:18:03 EDT
 
 # ID stuff:
 
