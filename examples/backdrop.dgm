@@ -1,0 +1,12 @@
+diagram Backdrop width 800 height 600 style clean
+# Put this rect (and its label) below where edges are:
+rect B "Backdrop" z -1 ul 0 0 size 800 600 class c3
+# These don't specify z, so it's 1, because they're nodes:
+rect A "foreground 1" ul 100 100 size 100 60 class c2
+rect C "foreground 2" ul 500 350 size 100 60 class c1 text-class c1
+rect D "foreground 3" ul 100 350 size 100 60 class c4 text-class c4
+# this edge is behind everything except the backdrop, B:
+# (it doesn't specify a z, so it's 0, because it's an edge)
+edge e1 from A to C class c4
+# this edge is in front of everything else, even A:
+edge e2 from A to D z 2

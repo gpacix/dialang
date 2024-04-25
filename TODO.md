@@ -41,7 +41,6 @@
  __ rotated text  04/11/24 22:04:24 EDT
  __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
- __ add z or layer coordinate; make edges default to 0, nodes default to 1  04/24/24 20:43:50 EDT
 
 # DONE
  ++ take a line and turn it into a dict  04/07/24 13:27:43 EDT  d. 04/07/24 13:47:25 EDT
@@ -64,6 +63,7 @@
  ++ add cloud  04/07/24 17:17:36 EDT  d. 04/14/24 00:30:00 EDT
  ++ add cylinder  04/07/24 17:17:36 EDT  d. 04/14/24 00:30:00 EDT
  ++ add "created by" comment; optionally include (entity-encoded) source code  04/11/24 21:44:40 EDT d. 04/24/24 21:18:03 EDT
+ ++ add z or layer coordinate; make edges default to 0, nodes default to 1  04/24/24 20:43:50 EDT d. 04/24/24 21:49:53 EDT
 
 # ID stuff:
 

@@ -125,6 +125,9 @@ def parse(tokens):
                                'url', 'stylesheet', 'style', 'class', 'text-class']:
             r[current_token] = tokens[i+1]
             i += 2
+        elif current_token in ['z']:
+            r[current_token] = to_number(tokens[i+1])
+            i += 2
         else:
             r['list'].append(current_token)
             i += 1
@@ -182,6 +185,13 @@ def get_center(r):
     ul = r['ul']
     s = r['size']
     return (ul[0]+s[0]/2.0, ul[1]+s[1]/2.0)
+
+def get_z(item):
+    if 'z' in item:
+        return item['z']
+    elif item['name'] == 'edge':
+        return 0
+    return 1
 
 def get_color_for_type(t):
     if (t + '_color') in context:
@@ -519,9 +529,9 @@ def main(args):
     parsed = [parse(tokenize(line)) for line in lines]
     for obj in parsed:
         objects[obj['id']] = obj
-    edges, nonedges = partition(is_edge, parsed)
 
-    svgobjects = [make_object(thing) for thing in edges + nonedges]
+    parsed.sort(key=get_z)
+    svgobjects = [make_object(thing) for thing in parsed]
     svgobjects = [ob for ob in svgobjects if ob]
     # either it has an external stylesheet, or it specified a style (if both, stylesheet wins):
     print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], '\n'.join(lines0),
