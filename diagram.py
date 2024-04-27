@@ -45,7 +45,7 @@ CLOUD_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="
 # This image is 52 x 68
 # x y  xscale yscale id class fill stroke
 CYLINDER_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-26,-34)">
-<path id="%s" class="%s" fill="%s" stroke="%s" style="stroke-width:3px"
+<path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:3px"
        d="M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0" /></g></g>'''
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
@@ -121,16 +121,18 @@ def parse(tokens):
         if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
             r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
             i += 3
-        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'radius',
+        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
                                'url', 'stylesheet', 'style', 'class', 'text-class']:
             r[current_token] = tokens[i+1]
             i += 2
-        elif current_token in ['z']:
+        elif current_token in ['z', 'radius']:
             r[current_token] = to_number(tokens[i+1])
             i += 2
         else:
             r['list'].append(current_token)
             i += 1
+    if r['name'] not in ['diagram', 'edge']:
+        calculate_dimensions(r)
     return r
 
 def make_object(parsed):
@@ -165,6 +167,52 @@ def get_id(item):
         return item['id']
     return 'unknown' # this will not be unique
 
+def calculate_bounds(x1, x2, xc, dx):
+    "Figure out x1 and x2 given any 2 inputs"
+    #print("calculate_bounds:", x1, x2, xc, dx)
+    if x1 is None:
+        if x2 is None:
+            x1 = xc - dx/2
+        else:
+            if dx is None:
+                x1 = 2*xc - x2
+            else:
+                x1 = x2 - dx
+    if x2 is None:
+        # have x1; which other do we have?
+        if dx is None:
+            x2 = 2*xc - x1
+        else:
+            x2 = x1 + dx
+    return x1, x2
+
+def calculate_dimensions(r):
+    "Make sure r has enough information to determine its bounding box"
+    # figure out info we do have: x1, y1, xc, yc, x2, y2
+    #print('calculate_dimensions:', r)
+    x1, y1, x2, y2 = None, None, None, None
+    xc, yc, dx, dy = None, None, None, None
+    for k in r:
+        if k == 'ul':
+            x1, y1 = r[k]
+        elif k == 'll':
+            x1, y2 = r[k]
+        elif k == 'ur':
+            x2, y1 = r[k]
+        elif k == 'lr':
+            x2, y2 = r[k]
+        elif k == 'center':
+            xc, yc = r[k]
+        elif k == 'size':
+            dx, dy = r[k]
+        elif k == 'radius':
+            dx, dy = 2*r[k], 2*r[k]
+    #print('calculate_dimensions:', (x1, y1, x2, y2, xc, yc, dx, dy))
+    x1, x2 = calculate_bounds(x1, x2, xc, dx)
+    y1, y2 = calculate_bounds(y1, y2, yc, dy)
+    r['ul'] = (x1, y1)
+    r['lr'] = (x2, y2)
+
 def get_ul(r):
     if 'ul' in r:
         return r['ul']
@@ -183,8 +231,15 @@ def get_center(r):
     if 'center' in r:
         return r['center']
     ul = r['ul']
-    s = r['size']
+    s = get_size(r)
     return (ul[0]+s[0]/2.0, ul[1]+s[1]/2.0)
+
+def get_size(r):
+    if 'size' in r:
+        return r['size']
+    ul = r['ul']
+    lr = r['lr']
+    return (lr[0] - ul[0], lr[1] - ul[1])
 
 def get_z(item):
     if 'z' in item:
@@ -247,7 +302,7 @@ def scale_points(points, w, h):
     return ' '.join([to_string(n) for n in r])
 
 def entity_encode(s):
-    return s.replace('&', '&amp;').replace('<', '&l;t;').replace('>', '&gt;')
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def id_encode(s):
     '''Encode s as an XML ID, meaning it matches: [A-Za-z_][A-Za-z_0-9\\.-]*,
@@ -269,7 +324,7 @@ def id_encode(s):
 def make_either_rect(item, rx, ry):
     label = get_label(item)
     x, y = get_ul(item)
-    width, height = item['size']
+    width, height = get_size(item)
     textwidth = get_text_width(label, width)
     textx, texty = get_center(item)
     texty += context['font_half_height']
@@ -290,14 +345,14 @@ def make_rounded_rect(r):
     return make_either_rect(r, 10, 10)
 
 def make_oval(r):
-    s = r['size']
+    s = get_size(r)
     m = min(s[0], s[1])/2.0
     return make_either_rect(r, m, m)
 
 def make_circle(item):
     label = get_label(item)
     x, y = item['center']
-    r = to_number(item['radius'])
+    r = item['radius']
     textwidth = get_text_width(label, 2 * r)
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
@@ -312,8 +367,8 @@ def make_circle(item):
 
 def make_diamond(item):
     label = get_label(item)
-    x, y = item['center']
-    width, height = item['size']
+    x, y = get_center(item)
+    width, height = get_size(item)
     textwidth = get_text_width(label, width, .6)
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
@@ -333,8 +388,8 @@ def make_diamond(item):
 
 def make_cloud(item):
     label = get_label(item)
-    x, y = item['center']
-    width, height = item['size']
+    x, y = get_center(item)
+    width, height = get_size(item)
     xscale, yscale = width / 118, height / 80
     textwidth = get_text_width(label, width, .6)
     texty = y + 2.5*context['font_half_height']
@@ -350,8 +405,8 @@ def make_cloud(item):
 
 def make_cylinder(item):
     label = get_label(item)
-    x, y = item['center']
-    width, height = item['size']
+    x, y = get_center(item)
+    width, height = get_size(item)
     xscale, yscale = width / 42, height / 34
     textwidth = get_text_width(label, width, .6)
     texty = y + 2.5*context['font_half_height'] ## TODO: adjust this
@@ -430,7 +485,7 @@ def ah_pos_circle(source, dest):
     '''Determine where the point of the arrowhead is when dest is a circle'''
     x1, y1 = get_center(source)
     x2, y2 = get_center(dest)
-    r = to_number(dest['radius'])
+    r = dest['radius']
     distance = length(x1, y1, x2, y2)
     factor = r / distance
     x = x2*(1-factor) + x1*factor
@@ -468,7 +523,7 @@ def make_edge(edge):
     ah_length, ah_width = 20, 20
     points_string = scale_points(ARROWHEAD_POINTS, ah_length, ah_width)
     rotation = get_angle(x1, y1, x2, y2)
-    arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', 'edge ' + css_classes, points_string, get_color(edge))
+    arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', 'arrowhead ' + css_classes, points_string, get_color(edge))
     return line + '\n' + arrowhead
 
 def make_diagram(diagram):
