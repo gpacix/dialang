@@ -33,20 +33,42 @@ ARROWHEAD_POINTS = [ -1, 0,  -1, -0.5,  0, 0,  -1, 0.5 ]
 
 PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
 
+class Shape:
+    def __init__(self, size, stroke_width, path):
+        self.size = size
+        self.stroke_width = stroke_width
+        self.path = path
+
+    PATH_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(%s,%s)">
+<path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:%s"
+       d="%s" /></g></g>'''
+
+    def emit(self, x, y, xscale, yscale, id, additional_class, fill, stroke):
+        return (self.PATH_TEMPLATE %
+                to_strings(x, y, xscale, yscale, -self.size[0]/2, -self.size[1]/2, id,
+                           additional_class, fill, stroke, self.stroke_width, self.path))
+
 # This image is 118 x 80
 # x y  xscale yscale id class fill stroke
-CLOUD_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-56,-38)">
-<path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:5px"
-       d="M72,19c13.117,0,23.809,10.578,23.996,23.648c-0.02,0.266-0.035,0.535-0.035,0.75
+cloud = Shape((118, 80), "5px", '''M72,19c13.117,0,23.809,10.578,23.996,23.648c-0.02,0.266-0.035,0.535-0.035,0.75
        c0,3.809,2.688,7.09,6.422,7.844 C107.957,52.363,112,57.309,112,63c0,6.617-5.383,12-12,12
        H14.508c-0.379-0.125-0.773-0.223-1.176-0.289C5.605,73.406,0,67.801,0,59c0-8.824,7.176-16,16-16
-       a 15 15 0 1 1 ,20-23  a 15 15 0 1 1, 36.5 -1" /></g></g>'''
+       a 15 15 0 1 1 ,20-23  a 15 15 0 1 1, 36.5 -1''')
+
+# CLOUD_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-56,-38)">
+# <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:5px"
+#        d="M72,19c13.117,0,23.809,10.578,23.996,23.648c-0.02,0.266-0.035,0.535-0.035,0.75
+#        c0,3.809,2.688,7.09,6.422,7.844 C107.957,52.363,112,57.309,112,63c0,6.617-5.383,12-12,12
+#        H14.508c-0.379-0.125-0.773-0.223-1.176-0.289C5.605,73.406,0,67.801,0,59c0-8.824,7.176-16,16-16
+#        a 15 15 0 1 1 ,20-23  a 15 15 0 1 1, 36.5 -1" /></g></g>'''
 
 # This image is 52 x 68
 # x y  xscale yscale id class fill stroke
-CYLINDER_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-26,-34)">
-<path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:3px"
-       d="M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0" /></g></g>'''
+
+cylinder = Shape((52, 68), "3px", '''M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0''')
+# CYLINDER_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-26,-34)">
+# <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:3px"
+#        d="M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0" /></g></g>'''
 
 context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
@@ -395,7 +417,8 @@ def make_cloud(item):
     texty = y + 2.5*context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
+#    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
+    node = (cloud.emit(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
@@ -412,7 +435,8 @@ def make_cylinder(item):
     texty = y + 2.5*context['font_half_height'] ## TODO: adjust this
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
+#    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
+    node = (cylinder.emit(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
