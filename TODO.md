@@ -1,9 +1,7 @@
 # TODO
 
  __ add some more shapes  04/07/24 17:17:36 EDT
-    __ hexagon
     __ polygon
-    __ parallelogram
     __ path
  __ plow through on common errors  04/24/24 22:16:29 EDT
  __ report errors, with line number and some context  04/24/24 22:16:29 EDT
@@ -68,6 +66,9 @@
  ++ add "created by" comment; optionally include (entity-encoded) source code  04/11/24 21:44:40 EDT d. 04/24/24 21:18:03 EDT
  ++ add z or layer coordinate; make edges default to 0, nodes default to 1  04/24/24 20:43:50 EDT d. 04/24/24 21:49:53 EDT
  ++ unify the path-based shapes: cylinder, cloud, others?  04/30/24 18:42:06 EDT d. 04/30/24 19:13:48 EDT
+ ++ add parallelogram 04/07/24 17:17:36 EDT d. 04/30/24 21:31:29 EDT
+ ++ add hexagon 04/07/24 17:17:36 EDT d. 04/30/24 21:31:29 EDT
+
 
 # ID stuff:
 

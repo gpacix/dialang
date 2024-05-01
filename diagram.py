@@ -43,7 +43,8 @@ class Shape:
 <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:%s"
        d="%s" /></g></g>'''
 
-    def emit(self, x, y, xscale, yscale, id, additional_class, fill, stroke):
+    def emit(self, x, y, width, height, id, additional_class, fill, stroke):
+        xscale, yscale = width / self.size[0], height / self.size[1]
         return (self.PATH_TEMPLATE %
                 to_strings(x, y, xscale, yscale, -self.size[0]/2, -self.size[1]/2, id,
                            additional_class, fill, stroke, self.stroke_width, self.path))
@@ -70,7 +71,11 @@ cylinder = Shape((52, 68), "3px", '''M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8 
 # <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:3px"
 #        d="M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0" /></g></g>'''
 
-context = { 'color': 'gray', 'text_color': 'black', 'edge_width': 3,
+parallelogram = Shape((100, 60), "1px", '''M 60,60 h -60 l 30 -60 h 60 l -30 60''') #  H 100 L 100 60
+
+hexagon = Shape((100, 60), "1px", '''M 20,60 l -20 -30 l 20 -30 h 60 l 20 30 l -20 30 h -60''')
+
+context = { 'color': '#C0C0C0', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
             'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif',
             'css_href': '', 'style': 'default'}
@@ -178,6 +183,10 @@ def make_object(parsed):
         return make_cloud(parsed)
     elif kind == 'cylinder':
         return make_cylinder(parsed)
+    elif kind == 'para':
+        return make_shape(parsed, parallelogram)
+    elif kind == 'hex':
+        return make_shape(parsed, hexagon)
     elif kind == 'diagram':
         return make_diagram(parsed)
     else:
@@ -412,13 +421,13 @@ def make_cloud(item):
     label = get_label(item)
     x, y = get_center(item)
     width, height = get_size(item)
-    xscale, yscale = width / 118, height / 80
+    #xscale, yscale = width / 118, height / 80
     textwidth = get_text_width(label, width, .6)
     texty = y + 2.5*context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
 #    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
-    node = (cloud.emit(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
+    node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
@@ -430,19 +439,37 @@ def make_cylinder(item):
     label = get_label(item)
     x, y = get_center(item)
     width, height = get_size(item)
-    xscale, yscale = width / 42, height / 34
+    #xscale, yscale = width / 42, height / 34
     textwidth = get_text_width(label, width, .6)
-    texty = y + 2.5*context['font_half_height'] ## TODO: adjust this
+    texty = y + 1.5*context['font_half_height'] ## TODO: adjust this
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
 #    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
-    node = (cylinder.emit(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
+    node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
             + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
                                          get_text_color(item), get_font_family(item), label))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
     return node
+
+def make_shape(item, shape):
+    label = get_label(item)
+    x, y = get_center(item)
+    width, height = get_size(item)
+    #xscale, yscale = width / 100, height / 60
+    textwidth = get_text_width(label, width, .6)
+    texty = y + 1*context['font_half_height'] ## TODO: adjust this
+    css_classes = get_class_str(item)
+    text_css_classes = get_text_class_str(item)
+    node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
+            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
+                                         get_text_color(item), get_font_family(item), label))
+    url = get_url(item)
+    if url:
+        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
+    return node
+
 
 def split_at_last(s, d):
     if d in s:

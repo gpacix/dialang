@@ -1,0 +1,13 @@
+diagram AllShapes width 800 height 700 stylesheet ../css/clean3.css
+# Show off shapes:
+rect rect1 "rect"             center 100 100 class c0 text-class c0 size 100 60
+rrect rrect1 "rrect"          center 300 100 class c1 text-class c1 size 100 60
+oval oval1 "oval"             center 500 100 class c2 text-class c2 size 100 60
+circle circle1 "circle"       center 100 300 class c3 text-class c3 radius 30
+diamond diamond1 "diamond"    center 300 300 class c4 text-class c4 size 100 60
+cloud cloud1 "cloud"          center 500 300 class c5 text-class c5 size 100 60
+cylinder cylinder1 "cylinder" center 100 500 class c2 text-class c2 size 100 90
+para para1 "parallelogram"    center 300 500 class c3 text-class c3 size 150 100
+hex hex1 "hexagon"            center 500 500 class c4 text-class c4 size 100 60
+
+edge e1 from rect1 to oval1 url news.ycombinator.com
