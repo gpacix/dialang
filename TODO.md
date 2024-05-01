@@ -5,7 +5,6 @@
     __ path
  __ plow through on common errors  04/24/24 22:16:29 EDT
  __ report errors, with line number and some context  04/24/24 22:16:29 EDT
- __ escape any "--" in the source code: not permitted in comments  04/24/24 23:22:43 EDT
  __ label placement options, possibly as a separate label element 04/11/24 21:42:42 EDT
  __ multi-line text (\n) 04/11/24 21:42:43 EDT
  __ make label automatically pick up the class from its container  04/11/24 21:43:23 EDT
@@ -68,6 +67,7 @@
  ++ unify the path-based shapes: cylinder, cloud, others?  04/30/24 18:42:06 EDT d. 04/30/24 19:13:48 EDT
  ++ add parallelogram 04/07/24 17:17:36 EDT d. 04/30/24 21:31:29 EDT
  ++ add hexagon 04/07/24 17:17:36 EDT d. 04/30/24 21:31:29 EDT
+ ++ escape any "--" in the source code: not permitted in comments  04/24/24 23:22:43 EDT d. 04/30/24 21:55:08 EDT
 
 
 # ID stuff:

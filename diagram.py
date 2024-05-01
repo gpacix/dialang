@@ -335,6 +335,10 @@ def scale_points(points, w, h):
 def entity_encode(s):
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
+def dash_encode(s):
+    "Two dashes is illegal inside an XML comment, so escape one"
+    return s.replace('--', '&#45;-')
+
 def id_encode(s):
     '''Encode s as an XML ID, meaning it matches: [A-Za-z_][A-Za-z_0-9\\.-]*,
        by replacing illegal characters with _ ; guaranteed to return a string'''
@@ -640,7 +644,7 @@ def main(args):
     svgobjects = [make_object(thing) for thing in parsed]
     svgobjects = [ob for ob in svgobjects if ob]
     # either it has an external stylesheet, or it specified a style (if both, stylesheet wins):
-    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], '\n'.join(lines0),
+    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], dash_encode('\n'.join(lines0)),
                           get_style_fragment(), '\n'.join(svgobjects)))
 
 if __name__ == '__main__':

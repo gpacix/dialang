@@ -9,5 +9,5 @@ cloud cloud1 "cloud"          center 500 300 class c5 text-class c5 size 100 60
 cylinder cylinder1 "cylinder" center 100 500 class c2 text-class c2 size 100 90
 para para1 "parallelogram"    center 300 500 class c3 text-class c3 size 150 100
 hex hex1 "hexagon"            center 500 500 class c4 text-class c4 size 100 60
-
+# This double dash -- gets escaped in the comment in the SVG
 edge e1 from rect1 to oval1 url news.ycombinator.com
