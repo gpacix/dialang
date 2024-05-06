@@ -159,7 +159,11 @@ def parse(tokens):
             r['list'].append(current_token)
             i += 1
     if r['name'] not in ['diagram', 'edge']:
-        calculate_dimensions(r)
+        try:
+            calculate_dimensions(r)
+        except TypeError:
+            print("Error in line with tokens %s" % tokens, file=sys.stderr)
+            sys.exit(3)
     return r
 
 def make_object(parsed):

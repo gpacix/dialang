@@ -22,6 +22,7 @@
     ++ position them correctly for rects (and rrects) 04/13/24 18:23:43 EDT  d. 04/13/24 20:37:30 EDT
     __ position them correctly for diamonds
     __ position them correctly for ovals
+    __ possibly make each shape say where an edge would intersect it 05/02/24 19:02:21 EDT
  __ figure out good syntax for no label 04/07/24 19:30:16 EDT
  __ respect the lr/ul positions for edge start/end  04/07/24 16:25:26 EDT
  __ add a background, or let the user do so: background color gray  04/07/24 14:26:05 EDT
@@ -41,6 +42,7 @@
  __ rotated text  04/11/24 22:04:24 EDT
  __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
+ __ relative positioning with + or - before values; need to use +0 or -0 05/02/24 19:01:38 EDT
 
 # DONE
  ++ take a line and turn it into a dict  04/07/24 13:27:43 EDT  d. 04/07/24 13:47:25 EDT
