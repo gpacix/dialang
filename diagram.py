@@ -109,9 +109,10 @@ def partition(pred, items):
             falsefor.append(it)
     return truefor, falsefor
 
-def tokenize(s):
+def tokenize(line):
+    num, s = line
     if '"' not in s and "'" not in s:
-        return s.split()
+        return num, s.split()
     # need to do it the hard way...
     # go until ", split that, then go until closing " and make single token
     length = len(s)
@@ -134,9 +135,10 @@ def tokenize(s):
         i += 1
     if acc:
         tokens += acc.split(' ')
-    return [t for t in tokens if t]
+    return num, [t for t in tokens if t]
 
-def parse(tokens):
+def parse(ntokens):
+    num, tokens = ntokens
     r = {}
     r['list'] = []
     r['name'] = tokens[0]
@@ -144,57 +146,75 @@ def parse(tokens):
     i = 2
     while i < len(tokens):
         current_token = tokens[i]
-        # special so far: center size ul ll ur lr color from to
-        if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
-            r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
-            i += 3
-        elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
-                               'url', 'stylesheet', 'style', 'class', 'text-class']:
-            r[current_token] = tokens[i+1]
-            i += 2
-        elif current_token in ['z', 'radius']:
-            r[current_token] = to_number(tokens[i+1])
-            i += 2
-        else:
-            r['list'].append(current_token)
-            i += 1
+        try:
+            # special so far: center size ul ll ur lr color from to
+            if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
+                r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
+                i += 3
+            elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
+                                   'url', 'stylesheet', 'style', 'class', 'text-class']:
+                r[current_token] = tokens[i+1]
+                i += 2
+            elif current_token in ['z', 'radius']:
+                r[current_token] = to_number(tokens[i+1])
+                i += 2
+            else:
+                r['list'].append(current_token)
+                i += 1
+        except IndexError as ie:
+            print("Missing value for %s in line %d with tokens %s" % (current_token, num, tokens), file=sys.stderr)
+            print(lines0[num-1], file=sys.stderr)
+            sys.exit(5)
+        except ValueError as ve:
+            print("Numeric value required for %s in line %d with tokens %s" % (current_token, num, tokens), file=sys.stderr)
+            print(lines0[num-1], file=sys.stderr)
+            sys.exit(7)
+
+
     if r['name'] not in ['diagram', 'edge']:
         try:
             calculate_dimensions(r)
         except TypeError:
-            print("Error in line with tokens %s" % tokens, file=sys.stderr)
+            print("Error with dimensions or size in line %d with tokens %s" % (num, tokens), file=sys.stderr)
+            print(lines0[num-1], file=sys.stderr)
             sys.exit(3)
-    return r
+    return num, r
 
-def make_object(parsed):
-    kind = parsed['name']
-    if kind == 'color':
-        context['color'] = parsed['id']
-        return None
-    elif kind == 'edge':
-        return make_edge(parsed)
-    elif kind == 'rect':
-        return make_rect(parsed)
-    elif kind == 'rrect':
-        return make_rounded_rect(parsed)
-    elif kind == 'oval':
-        return make_oval(parsed)
-    elif kind == 'circle':
-        return make_circle(parsed)
-    elif kind == 'diamond':
-        return make_diamond(parsed)
-    elif kind == 'cloud':
-        return make_cloud(parsed)
-    elif kind == 'cylinder':
-        return make_cylinder(parsed)
-    elif kind == 'para':
-        return make_shape(parsed, parallelogram)
-    elif kind == 'hex':
-        return make_shape(parsed, hexagon)
-    elif kind == 'diagram':
-        return make_diagram(parsed)
-    else:
-        return None
+def make_object(nparsed):
+    num, parsed = nparsed
+    try:
+        kind = parsed['name']
+        if kind == 'color':
+            context['color'] = parsed['id']
+            return None
+        elif kind == 'edge':
+            return make_edge(parsed)
+        elif kind == 'rect':
+            return make_rect(parsed)
+        elif kind == 'rrect':
+            return make_rounded_rect(parsed)
+        elif kind == 'oval':
+            return make_oval(parsed)
+        elif kind == 'circle':
+            return make_circle(parsed)
+        elif kind == 'diamond':
+            return make_diamond(parsed)
+        elif kind == 'cloud':
+            return make_cloud(parsed)
+        elif kind == 'cylinder':
+            return make_cylinder(parsed)
+        elif kind == 'para':
+            return make_shape(parsed, parallelogram)
+        elif kind == 'hex':
+            return make_shape(parsed, hexagon)
+        elif kind == 'diagram':
+            return make_diagram(parsed)
+        else:
+            return None
+    except KeyError as ke:
+        print("Missing property %s in line %d with tokens %s" % (ke, num, parsed), file=sys.stderr)
+        print(lines0[num-1], file=sys.stderr)
+        sys.exit(4)
 
 def get_id(item):
     # we 100% fully expect to have an ID, but...
@@ -276,7 +296,8 @@ def get_size(r):
     lr = r['lr']
     return (lr[0] - ul[0], lr[1] - ul[1])
 
-def get_z(item):
+def get_z(nitem):
+    num, item = nitem
     if 'z' in item:
         return item['z']
     elif item['name'] == 'edge':
@@ -487,13 +508,19 @@ def split_at_last(s, d):
 def is_edge(obj):
     return obj['name'] == 'edge'
 
+def get_endpoint(edge, fromto):
+    objid, pos = split_at_last(edge[fromto], '.')
+    if objid not in objects:
+        print("Unknown node with ID %s for edge %s" % (objid, edge), file=sys.stderr)
+        #print(lines0[num-1], file=sys.stderr)
+        sys.exit(6)
+    return objects[objid]
+
 def get_start(edge):
-    sourceid, pos = split_at_last(edge['from'], '.')
-    return objects[sourceid]
+    return get_endpoint(edge, 'from')
 
 def get_end(edge):
-    destid, pos = split_at_last(edge['to'], '.')
-    return objects[destid]
+    return get_endpoint(edge, 'to')
 
 def get_width(edge):
     if 'width' in edge:
@@ -632,16 +659,22 @@ def open_file(args):
         return open(args[0])
     return sys.stdin
 
+lines0 = []
+
 def main(args):
+    global lines0
     filenameargs = [a for a in args if '=' not in a]
     lines0 = open_file(filenameargs + ['-']).readlines()
     lines0 = [line.rstrip('\r\n') for line in lines0]
     update_context(args)
 
+    # keep the line numbers for error reporting:
+    lines = zip(range(1, len(lines0)+1), lines0)
     # remove blank lines and comment lines (first non-whitespace char is #):
-    lines = [line for line in lines0 if line.lstrip() and line.lstrip()[0] != '#']
+    lines = [line for line in lines if line[1].lstrip() and line[1].lstrip()[0] != '#']
     parsed = [parse(tokenize(line)) for line in lines]
-    for obj in parsed:
+    for nobj in parsed:
+        obj = nobj[1]
         objects[obj['id']] = obj
 
     parsed.sort(key=get_z)
