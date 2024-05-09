@@ -33,6 +33,9 @@ ARROWHEAD_POINTS = [ -1, 0,  -1, -0.5,  0, 0,  -1, 0.5 ]
 
 PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
 
+KINDS = [ 'color', 'edge', 'rect', 'rrect', 'oval', 'circle', 'diamond',
+          'cloud', 'cylinder', 'para', 'hex', 'diagram' ]
+
 class Shape:
     def __init__(self, size, stroke_width, path):
         self.size = size
@@ -141,7 +144,18 @@ def parse(ntokens):
     num, tokens = ntokens
     r = {}
     r['list'] = []
-    r['name'] = tokens[0]
+
+    kind = tokens[0]
+    if kind not in KINDS:
+            print('Unknown element type "%s" in line %d with tokens %s' % (kind, num, tokens), file=sys.stderr)
+            print(lines0[num-1], file=sys.stderr)
+            sys.exit(9)
+    r['name'] = kind
+
+    if len(tokens) < 2:
+        print("Missing ID for %s in line %d with tokens %s" % (tokens[0], num, tokens), file=sys.stderr)
+        print(lines0[num-1], file=sys.stderr)
+        sys.exit(8)
     r['id'] = tokens[1]
     i = 2
     while i < len(tokens):
