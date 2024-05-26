@@ -623,29 +623,30 @@ def make_arrowhead(edge, x1, y1, x2, y2, hx, hy, css_classes, end):
     arrowhead = POLYGON_TEMPLATE % to_strings(hx, hy, rotation, get_id(edge)+end, 'arrowhead ' + css_classes, points_string, get_color(edge))
     return arrowhead
 
+def has_head(edge):
+    return get_arrow(edge) in ['head', 'both']
+
+def has_tail(edge):
+    return get_arrow(edge) in ['tail', 'both']
+
 def make_edge(edge):
     color = get_color(edge)
     width = get_width(edge)
     source = get_start(edge)
     dest = get_end(edge)
-    arrow = get_arrow(edge)
-    x1, y1 = get_center(source)
-    x2, y2 = get_center(dest)
+    xb, yb = get_center(source)
+    xe, ye = get_center(dest)
     css_classes = get_class_str(edge)
-    if arrow in ['head', 'both']:
+    if has_head(edge):
         hx, hy, xe, ye = arrowhead_position(source, dest)
-    else:
-        xe, ye = x2, y2
-    if arrow in ['tail', 'both']:
+    if has_tail(edge):
         tx, ty, xb, yb = arrowhead_position(dest, source) # note reversal!
-    else:
-        xb, yb = x1, y1
     line = LINE_TEMPLATE % to_strings(get_id(edge), css_classes, xb, yb, xe, ye, color, width)
     result = line
-    if arrow in ['head', 'both']:
-        result += '\n' + make_arrowhead(edge, x1, y1, x2, y2, hx, hy, css_classes, '-he')
-    if arrow in ['tail', 'both']:
-        result += '\n' + make_arrowhead(edge, x2, y2, x1, y1, tx, ty, css_classes, '-ta')
+    if has_head(edge):
+        result += '\n' + make_arrowhead(edge, xb, yb, xe, ye, hx, hy, css_classes, '-he')
+    if has_tail(edge):
+        result += '\n' + make_arrowhead(edge, xe, ye, xb, yb, tx, ty, css_classes, '-ta')
     return result
 
 def make_diagram(diagram):

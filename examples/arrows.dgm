@@ -9,3 +9,5 @@ edge arrowedge arrow head from r1 to r2
 edge undirected arrow none from r3 to r4 class c4
 edge undirected2 from r3 to r2
 edge arrow2 arrow both from r1 to r4 class c5
+edge arrow3 arrow tail from r2 to r3 class c4
+edge arrow4 arrow head from r2 to r3 class c3
