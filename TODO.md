@@ -39,6 +39,7 @@
  __ write up a convention for what should be in stylesheets; maybe include bold and italic?  04/10/24 23:25:09 EDT
     we already intend to provide classes c0-c5, plus corresponding legible text classes
  __ multi-edges, like the T edges in t-edges.dgm  04/11/24 22:04:24 EDT
+ __ routable edges: from n1 to n2 through "+20 -10   +40 -10" (relative to source, I guess) 05/26/24 11:16:21 EDT
  __ rotated text  04/11/24 22:04:24 EDT
  __ add simple macros: substitute a fixed string for a fixed token 05/25/24 21:26:55 EDT
  __ add parameterized macros: substitute a string with substitutions for a fixed token plus values 05/25/24 21:26:55 EDT
@@ -50,6 +51,9 @@
  __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
  __ relative positioning with + or - before values; need to use +0 or -0 05/02/24 19:01:38 EDT
+ __ generate a bunch of files for spec-by-example 05/26/24 11:21:41 EDT
+ __ reverse-translate: take an SVG and do its best to generate dialang code 05/26/24 11:16:50 EDT
+ __ annotate: specify an existing SVG (or PNG), then *add* elements to it (maybe "annotation" instead of "diagram"?) 05/26/24 11:17:27 EDT
 
 # DONE
  ++ take a line and turn it into a dict  04/07/24 13:27:43 EDT  d. 04/07/24 13:47:25 EDT
