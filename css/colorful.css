@@ -4,6 +4,8 @@ svg { background-color: #F8FFF0; }
 
 .edge { stroke-width: 17; fill: black; stroke: purple;}
 
+.arrowhead { fill: black; stroke: purple;}
+
 .text { fill: #00FF00; font-family: skia,helvetica,sans-serif; }
 
 .important { fill: red; }

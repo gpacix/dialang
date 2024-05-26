@@ -5,6 +5,7 @@ svg { background-color: white; }
 .text { fill: #005582; stroke: #005582; font-family: skia,helvetica,sans-serif; }
 
 .edge { stroke-width: 3; fill: #005582; stroke: #005582; }
+.arrowhead { fill: #005582; stroke: #005582; }
 
 .edge.thin { stroke-width: 1; }
 .edge.thick { stroke-width: 5; }

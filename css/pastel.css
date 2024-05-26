@@ -6,6 +6,8 @@ svg { background-color: white; }
 
 .edge { stroke-width: 3; fill: #5030B0; stroke: #5030B0; }
 
+.arrowhead { fill: #5030B0; stroke: #5030B0; }
+
 .edge.thin { stroke-width: 1; }
 .edge.thick { stroke-width: 5; }
 
