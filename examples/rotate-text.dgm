@@ -1,0 +1,13 @@
+diagram RotatedText width 800 height 700 stylesheet ../css/clean3.css
+# Show off text rotation:
+rect rect1 "rect"  trotate -90  center 100 100 class c0 size 100 60
+rrect rrect1 "rrect" trotate 90 center 300 100 class c1 size 100 60
+oval oval1 "oval"              center 500 100 class c2 size 100 60
+circle circle1 "circle" trotate -60       center 100 300 class c3 radius 30
+diamond diamond1 "diamond"     center 300 300 class c4 size 100 60
+cloud cloud1 "cloud" trotate -22 center 500 300 class c5 size 100 60
+cylinder cylinder1 "cylinder"  center 100 500 class c2 size 100 90
+para para1 "parallelogram" trotate -63     center 300 500 class c3 size 150 100
+hex hex1 "hexagon"             center 500 500 class c4 size 100 60
+# This double dash -- gets escaped in the comment in the SVG
+edge e1 from rect1 to oval1 url news.ycombinator.com

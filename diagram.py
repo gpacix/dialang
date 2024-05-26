@@ -170,7 +170,7 @@ def parse(ntokens):
                                    'url', 'stylesheet', 'style', 'class', 'text-class', 'arrow']:
                 r[current_token] = tokens[i+1]
                 i += 2
-            elif current_token in ['z', 'radius', 'rotate']:
+            elif current_token in ['z', 'radius', 'trotate']:
                 r[current_token] = to_number(tokens[i+1])
                 i += 2
             else:
@@ -347,9 +347,9 @@ def get_label(item):
             return ls[0]
     return item['id']
 
-def get_rotate(item):
-    if 'rotate' in item:
-        return item['rotate']
+def get_label_rotation(item):
+    if 'trotate' in item:
+        return item['trotate']
     return 0
 
 def get_url(item):
@@ -408,7 +408,7 @@ def make_label(item, text_width_adj=1.0, height_adj=1.0):
     center_adjust = height_adj * context['font_half_height']
     width, height = get_size(item)
     textwidth = get_text_width(label, width * text_width_adj)
-    rot = get_rotate(item)
+    rot = get_label_rotation(item)
     # TODO: use this in the template: texty += context['font_half_height']
     return TEXT_TEMPLATE % to_strings(get_id(item)+'-label', get_text_class_str(item),
                                       textx, texty, rot, center_adjust, textwidth,
