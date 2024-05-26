@@ -1,0 +1,8 @@
+diagram Label_Stretching width 800 height 800 style clean
+rect r1 class c0 center 60  40 size 100 60 "W"
+rect r2 center 60 140 size 100 60 "Word Word"
+rect r3 center 60 240 size 100 60 "Word Word Word"
+rect r4 center 60 340 size 100 60 "Word Word Word Word"
+rect r5 center 60 440 size 100 60 "Word Word Word Word Word"
+rect r6 center 60 540 size 100 60 "Word Word Word Word Word Word"
+rect r7 center 60 640 size 100 60 "Word Word Word Word Word Word Word Word Word Word Word Word"
