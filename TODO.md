@@ -78,7 +78,9 @@
  ++ add hexagon 04/07/24 17:17:36 EDT d. 04/30/24 21:31:29 EDT
  ++ escape any "--" in the source code: not permitted in comments  04/24/24 23:22:43 EDT d. 04/30/24 21:55:08 EDT
  ++ report errors, with line number and some context  04/24/24 22:16:29 EDT d. 05/09/24 11:23:16 EDT
-
+ ++ make the text-class of a node's label default to the node's class  d. 05/25/24 21:38:30 EDT
+ ++ add tail arrows to edges (for `arrow tail` or `arrow both`)  d. 05/25/24 22:54:20 EDT
+ ++ fix the angle of arrowheads to match the line part of the edge  05/25/24 23:22:43 EDT
 
 # ID stuff:
 
