@@ -40,6 +40,13 @@
     we already intend to provide classes c0-c5, plus corresponding legible text classes
  __ multi-edges, like the T edges in t-edges.dgm  04/11/24 22:04:24 EDT
  __ rotated text  04/11/24 22:04:24 EDT
+ __ add simple macros: substitute a fixed string for a fixed token 05/25/24 21:26:55 EDT
+ __ add parameterized macros: substitute a string with substitutions for a fixed token plus values 05/25/24 21:26:55 EDT
+ __ add variables: replace fixed token with value, allow incrementing and decrementing (even, e.g., c2 -> c3) 05/25/24 21:26:55 EDT
+ __ figure out a way to loop across a grid of positions 05/25/24 21:26:55 EDT
+ __ maybe add actual functions 05/25/24 21:26:55 EDT
+ __ maybe add loops 05/25/24 21:26:55 EDT
+ __ maybe add conditionals 05/25/24 21:26:55 EDT
  __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
  __ relative positioning with + or - before values; need to use +0 or -0 05/02/24 19:01:38 EDT
