@@ -19,7 +19,7 @@ RECT_TEMPLATE='<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s
 
 LINE_TEMPLATE='<line id="%s" class="edge %s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
-TEXT_TEMPLATE = '<text id="%s" class="text %s" x="%s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+TEXT_TEMPLATE = '<text id="%s" class="text %s" transform="translate(%s,%s) rotate(%s) translate(0,%s)" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
 CIRCLE_TEMPLATE = '<circle id="%s" class="node %s" cx="%s" cy="%s" r="%s" fill="%s" />'
 
@@ -37,10 +37,11 @@ KINDS = [ 'color', 'edge', 'rect', 'rrect', 'oval', 'circle', 'diamond',
           'cloud', 'cylinder', 'para', 'hex', 'diagram' ]
 
 class Shape:
-    def __init__(self, size, stroke_width, path):
+    def __init__(self, size, stroke_width, path, height_adj=1):
         self.size = size
         self.stroke_width = stroke_width
         self.path = path
+        self.height_adj = height_adj # number of font-half-heights to move the label down
 
     PATH_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(%s,%s)">
 <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:%s"
@@ -57,7 +58,7 @@ class Shape:
 cloud = Shape((118, 80), "5px", '''M72,19c13.117,0,23.809,10.578,23.996,23.648c-0.02,0.266-0.035,0.535-0.035,0.75
        c0,3.809,2.688,7.09,6.422,7.844 C107.957,52.363,112,57.309,112,63c0,6.617-5.383,12-12,12
        H14.508c-0.379-0.125-0.773-0.223-1.176-0.289C5.605,73.406,0,67.801,0,59c0-8.824,7.176-16,16-16
-       a 15 15 0 1 1 ,20-23  a 15 15 0 1 1, 36.5 -1''')
+       a 15 15 0 1 1 ,20-23  a 15 15 0 1 1, 36.5 -1''', 2.5)
 
 # CLOUD_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-56,-38)">
 # <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:5px"
@@ -69,12 +70,12 @@ cloud = Shape((118, 80), "5px", '''M72,19c13.117,0,23.809,10.578,23.996,23.648c-
 # This image is 52 x 68
 # x y  xscale yscale id class fill stroke
 
-cylinder = Shape((52, 68), "3px", '''M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0''')
+cylinder = Shape((52, 68), "3px", '''M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0''', 1.5)
 # CYLINDER_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(-26,-34)">
 # <path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:3px"
 #        d="M1,9 v 50 a 25 8  0 0 0 50 0 v -50  a 25 8  0 1 0 -50 0  a 25 8  0 1 0 50 0" /></g></g>'''
 
-parallelogram = Shape((100, 60), "1px", '''M 60,60 h -60 l 30 -60 h 60 l -30 60''') #  H 100 L 100 60
+parallelogram = Shape((100, 60), "1px", '''M 60,60 h -60 l 30 -60 h 60 l -30 60''', 0) #  H 100 L 100 60
 
 hexagon = Shape((100, 60), "1px", '''M 20,60 l -20 -30 l 20 -30 h 60 l 20 30 l -20 30 h -60''')
 
@@ -169,7 +170,7 @@ def parse(ntokens):
                                    'url', 'stylesheet', 'style', 'class', 'text-class', 'arrow']:
                 r[current_token] = tokens[i+1]
                 i += 2
-            elif current_token in ['z', 'radius']:
+            elif current_token in ['z', 'radius', 'rotate']:
                 r[current_token] = to_number(tokens[i+1])
                 i += 2
             else:
@@ -346,6 +347,11 @@ def get_label(item):
             return ls[0]
     return item['id']
 
+def get_rotate(item):
+    if 'rotate' in item:
+        return item['rotate']
+    return 0
+
 def get_url(item):
     if 'url' in item:
         return item['url']
@@ -396,18 +402,24 @@ def id_encode(s):
         id = '_'
     return id
 
-def make_either_rect(item, rx, ry):
+def make_label(item, text_width_adj=1.0, height_adj=1.0):
     label = get_label(item)
+    textx, texty = get_center(item)
+    center_adjust = height_adj * context['font_half_height']
+    width, height = get_size(item)
+    textwidth = get_text_width(label, width * text_width_adj)
+    rot = get_rotate(item)
+    # TODO: use this in the template: texty += context['font_half_height']
+    return TEXT_TEMPLATE % to_strings(get_id(item)+'-label', get_text_class_str(item),
+                                      textx, texty, rot, center_adjust, textwidth,
+                                      get_text_color(item), get_font_family(item), label)
+
+def make_either_rect(item, rx, ry):
     x, y = get_ul(item)
     width, height = get_size(item)
-    textwidth = get_text_width(label, width)
-    textx, texty = get_center(item)
-    texty += context['font_half_height']
     css_classes = get_class_str(item)
-    text_css_classes = get_text_class_str(item)
     node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, get_color(item))
-            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, textx, texty, textwidth,
-                                         get_text_color(item), get_font_family(item), label))
+            + '\n' + make_label(item))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % entity_encode(url)) + node + '</a>'
@@ -428,13 +440,11 @@ def make_circle(item):
     label = get_label(item)
     x, y = item['center']
     r = item['radius']
-    textwidth = get_text_width(label, 2 * r)
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
     node = (CIRCLE_TEMPLATE % to_strings(get_id(item), css_classes, x, y, r, get_color(item))
-            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
-                                         get_text_color(item), get_font_family(item), label))
+            + '\n' + make_label(item))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
@@ -444,7 +454,6 @@ def make_diamond(item):
     label = get_label(item)
     x, y = get_center(item)
     width, height = get_size(item)
-    textwidth = get_text_width(label, width, .6)
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
@@ -454,44 +463,40 @@ def make_diamond(item):
     points_string = scale_points(DIAMOND_POINTS, width, height)
     rotation = 0
     node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), 'node ' + css_classes, points_string, get_color(item))
-            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
-                                         get_text_color(item), get_font_family(item), label))
+            + '\n' + make_label(item, .6))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
     return node
 
 def make_cloud(item):
+    shape = cloud
     label = get_label(item)
     x, y = get_center(item)
     width, height = get_size(item)
     #xscale, yscale = width / 118, height / 80
-    textwidth = get_text_width(label, width, .6)
-    texty = y + 2.5*context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
 #    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
     node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", get_color(item))
-            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
-                                         get_text_color(item), get_font_family(item), label))
+            + '\n' + make_label(item, .6, shape.height_adj))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
     return node
 
 def make_cylinder(item):
+    shape = cylinder
     label = get_label(item)
     x, y = get_center(item)
     width, height = get_size(item)
     #xscale, yscale = width / 42, height / 34
-    textwidth = get_text_width(label, width, .6)
     texty = y + 1.5*context['font_half_height'] ## TODO: adjust this
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
 #    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
     node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
-            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
-                                         get_text_color(item), get_font_family(item), label))
+            + '\n' + make_label(item, .6, shape.height_adj))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
@@ -502,13 +507,10 @@ def make_shape(item, shape):
     x, y = get_center(item)
     width, height = get_size(item)
     #xscale, yscale = width / 100, height / 60
-    textwidth = get_text_width(label, width, .6)
-    texty = y + 1*context['font_half_height'] ## TODO: adjust this
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
     node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
-            + TEXT_TEMPLATE % to_strings(get_id(item)+'-label', text_css_classes, x, texty, textwidth,
-                                         get_text_color(item), get_font_family(item), label))
+            + '\n' + make_label(item, .6, shape.height_adj))
     url = get_url(item)
     if url:
         node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
