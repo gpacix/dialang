@@ -359,6 +359,8 @@ def get_class_str(item):
 def get_text_class_str(item):
     if 'text-class' in item:
         return ' ' + item['text-class']
+    elif 'class' in item:
+        return ' ' + item['class']
     return ''
 
 def get_text_width(s, maxwidth, hint=.95):
