@@ -166,7 +166,7 @@ def parse(ntokens):
                 r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
                 i += 3
             elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
-                                   'url', 'stylesheet', 'style', 'class', 'text-class']:
+                                   'url', 'stylesheet', 'style', 'class', 'text-class', 'arrow']:
                 r[current_token] = tokens[i+1]
                 i += 2
             elif current_token in ['z', 'radius']:
@@ -183,7 +183,6 @@ def parse(ntokens):
             print("Numeric value required for %s in line %d with tokens %s" % (current_token, num, tokens), file=sys.stderr)
             print(lines0[num-1], file=sys.stderr)
             sys.exit(7)
-
 
     if r['name'] not in ['diagram', 'edge']:
         try:
@@ -543,6 +542,11 @@ def get_width(edge):
         return edge['width']
     return context['edge_width']
 
+def get_arrow(edge):
+    if 'arrow' in edge:
+        return edge['arrow']
+    return 'none'
+
 def find_nearest_port(dest, source):
     "Return a port (e.g. ul, lc) on dest that faces source"
     dc = get_center(dest)
@@ -616,17 +620,24 @@ def make_edge(edge):
     width = get_width(edge)
     source = get_start(edge)
     dest = get_end(edge)
+    arrow = get_arrow(edge)
     x1, y1 = get_center(source)
     x2, y2 = get_center(dest)
     css_classes = get_class_str(edge)
-    x, y, xe, ye = arrowhead_position(source, dest)
+    if arrow in ['head', 'both']:
+        x, y, xe, ye = arrowhead_position(source, dest)
+    else:
+        xe, ye = x2, y2
     line = LINE_TEMPLATE % to_strings(get_id(edge), css_classes, x1, y1, xe, ye, color, width)
-    # use the polygon template:
-    ah_length, ah_width = 20, 20
-    points_string = scale_points(ARROWHEAD_POINTS, ah_length, ah_width)
-    rotation = get_angle(x1, y1, x2, y2)
-    arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', 'arrowhead ' + css_classes, points_string, get_color(edge))
-    return line + '\n' + arrowhead
+    result = line
+    if arrow in ['head', 'both']:
+        # use the polygon template:
+        ah_length, ah_width = 20, 20
+        points_string = scale_points(ARROWHEAD_POINTS, ah_length, ah_width)
+        rotation = get_angle(x1, y1, x2, y2)
+        arrowhead = POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(edge)+'-he', 'arrowhead ' + css_classes, points_string, get_color(edge))
+        result += '\n' + arrowhead
+    return result
 
 def make_diagram(diagram):
     context['diagram_width']  = diagram['width']

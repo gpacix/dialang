@@ -1,0 +1,11 @@
+# Show edges with and without arrowheads
+diagram Arrow_Styles width 800 height 400 style clean
+rect r1 "Arrowhead at Head" ul 20 20 size 160 60 class c1
+rect r2 "Head" ul 240 20 size 160 60 class c2
+rect r3 "No Arrowhead" ul 20 220 size 160 60 class c3
+rect r4 "Head" ul 240 220 size 160 60 class c4
+
+edge arrowedge arrow head from r1 to r2
+edge undirected arrow none from r3 to r4 class c4
+edge undirected2 from r3 to r2
+edge arrow2 arrow both from r1 to r4 class c5
