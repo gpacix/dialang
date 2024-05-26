@@ -414,16 +414,19 @@ def make_label(item, text_width_adj=1.0, height_adj=1.0):
                                       textx, texty, rot, center_adjust, textwidth,
                                       get_text_color(item), get_font_family(item), label)
 
+def wrap_with_url(node, item):
+    url = get_url(item)
+    if url:
+        return ('<a xlink:href="%s" xlink:title="click">' % entity_encode(url)) + node + '</a>'
+    return node
+
 def make_either_rect(item, rx, ry):
     x, y = get_ul(item)
     width, height = get_size(item)
     css_classes = get_class_str(item)
     node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, get_color(item))
             + '\n' + make_label(item))
-    url = get_url(item)
-    if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % entity_encode(url)) + node + '</a>'
-    return node
+    return wrap_with_url(node, item)
 
 def make_rect(r):
     return make_either_rect(r, 0, 0)
@@ -445,10 +448,7 @@ def make_circle(item):
     text_css_classes = get_text_class_str(item)
     node = (CIRCLE_TEMPLATE % to_strings(get_id(item), css_classes, x, y, r, get_color(item))
             + '\n' + make_label(item))
-    url = get_url(item)
-    if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
-    return node
+    return wrap_with_url(node, item)
 
 def make_diamond(item):
     label = get_label(item)
@@ -464,10 +464,7 @@ def make_diamond(item):
     rotation = 0
     node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), 'node ' + css_classes, points_string, get_color(item))
             + '\n' + make_label(item, .6))
-    url = get_url(item)
-    if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
-    return node
+    return wrap_with_url(node, item)
 
 def make_cloud(item):
     shape = cloud
@@ -480,10 +477,7 @@ def make_cloud(item):
 #    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
     node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", get_color(item))
             + '\n' + make_label(item, .6, shape.height_adj))
-    url = get_url(item)
-    if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
-    return node
+    return wrap_with_url(node, item)
 
 def make_cylinder(item):
     shape = cylinder
@@ -497,10 +491,7 @@ def make_cylinder(item):
 #    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
     node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
             + '\n' + make_label(item, .6, shape.height_adj))
-    url = get_url(item)
-    if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
-    return node
+    return wrap_with_url(node, item)
 
 def make_shape(item, shape):
     label = get_label(item)
@@ -511,10 +502,7 @@ def make_shape(item, shape):
     text_css_classes = get_text_class_str(item)
     node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
             + '\n' + make_label(item, .6, shape.height_adj))
-    url = get_url(item)
-    if url:
-        node = ('<a xlink:href="%s" xlink:title="click">' % url) + node + '</a>'
-    return node
+    return wrap_with_url(node, item)
 
 
 def split_at_last(s, d):
