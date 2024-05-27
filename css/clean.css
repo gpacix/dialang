@@ -1,5 +1,9 @@
 svg { background-color: white; }
 
+.important { filter: saturation(150%); }
+.unimportant { filter: saturation(50%); }
+.edge.subtle { fill: #DDDDDD; stroke: #DDDDDD; stroke-dasharray: 3 3; }
+
 .node { opacity: 1.0; fill: #2792c2; stroke: #2792c2; stroke-width: 0; }
 
 .text { fill: #005582; stroke: #005582; font-family: skia,helvetica,sans-serif; }
@@ -9,7 +13,10 @@ svg { background-color: white; }
 
 .edge.thin { stroke-width: 1; }
 .edge.thick { stroke-width: 5; }
+.edge.dotted { stroke-dasharray: 3 3; }
+.edge.dashed { stroke-dasharray: 8 4; }
 
+.outline { fill: white; stroke: #000000; stroke-width: 2.5; }
 
 .c0 { fill: #000000; stroke: #000000; }
 .c1 { fill: #005582; stroke: #005582; }
@@ -17,6 +24,7 @@ svg { background-color: white; }
 .c3 { fill: #81D0E6; stroke: #81D0E6; }
 .c4 { fill: #CCDF79; stroke: #CCDF79; }
 .c5 { fill: #f69f46; stroke: #f69f46; }
+.c6 { fill: white; stroke: white; }
 
 .text.c0 { fill: white; stroke: white; }
 .text.c1 { fill: #CCDF79; stroke: #CCDF79; }
@@ -24,5 +32,11 @@ svg { background-color: white; }
 .text.c3 { fill: #005582; stroke: #005582; }
 .text.c4 { fill: #005582; stroke: #005582; }
 .text.c5 { fill: black; stroke: black; }
+.text.c6 { fill: black; stroke: black; }
 
+.node:hover { filter: brightness(150%); }
+.edge:hover { filter: brightness(150%); stroke-width: 7; }
+.arrowhead:hover { filter: brightness(150%); stroke-width: 7; }
+.text:hover { filter: brightness(200%); }
+.nohover:hover { filter: brightness(100%); }
 .invisible { fill: none; stroke: none; }
