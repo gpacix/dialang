@@ -44,7 +44,7 @@ All of them specify their size and position like `rect`, *except for
 `circle circle1 "A Circle" center 200 300 radius 100`
 
 
-## Node Labels
+### Node Labels
 
 You can omit a node label by supplying `" "`; the quotes are
 mandatory, since you're setting it to a single space.
@@ -110,14 +110,37 @@ Similarly, if you want upside-down text, you can set `trotate 180`,
 though you should begin to wonder about the life choices
 that brougt you to that point.
 
-## Node URLs
+### Node URLs
 
 `url`: you can specify a URL to go to when the node is clicked on
 
 `diamond d1 "Diamond" center 100 100 size 100 80 url https://en.wikipedia.org/wiki/Diamond`
 
+If the URL contains spaces, you must enclose it in quotes (either a
+pair of double quotes or a pair of single quotes). (Why does your URL
+contain spaces? Use `+`. We have standards, you know.)
+
 Specify the `http` or `https` and hostname along with the path to
 avoid strange results.
+
+### Node Rollover Text
+
+`rollover`: you can specify a string to display when the user hovers
+over the node or its label for a few seconds
+
+Unless you have no spaces in your rollover text, you must enclose it
+in either a pair of double quotes or a pair of single quotes.
+
+Different systems call this feature different things: link titles,
+popup text, hover text, rollover text, tooltips, etc.
+
+This string can be quite long, but browsers will only use the first
+part of it; on Brave/Chrome, that means the first 1024 characters.
+
+You can't do much with this text: the browser wraps it, and doesn't
+interpret any HTML or backslash-escaped characters such as `\n` or
+`\\n`.  But it's good for adding additional information, or reminders
+to the user what an abbreviation stands for.
 
 
 ## Edges

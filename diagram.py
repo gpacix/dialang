@@ -167,7 +167,7 @@ def parse(ntokens):
                 r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
                 i += 3
             elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
-                                   'url', 'stylesheet', 'style', 'class', 'text-class', 'arrow']:
+                                   'url', 'rollover', 'stylesheet', 'style', 'class', 'text-class', 'arrow']:
                 r[current_token] = tokens[i+1]
                 i += 2
             elif current_token in ['z', 'radius', 'trotate']:
@@ -356,6 +356,10 @@ def get_url(item):
     if 'url' in item:
         return item['url']
 
+def get_rollover(item):
+    if 'rollover' in item:
+        return item['rollover']
+
 def get_class_str(item):
     if 'class' in item:
         return ' ' + item['class']
@@ -415,9 +419,17 @@ def make_label(item, text_width_adj=1.0, height_adj=1.0):
                                       get_text_color(item), get_font_family(item), label)
 
 def wrap_with_url(node, item):
+    url_atts = ""
+    title_atts = ""
     url = get_url(item)
+    rollover = get_rollover(item)
+
     if url:
-        return ('<a xlink:href="%s" xlink:title="click">' % entity_encode(url)) + node + '</a>'
+        url_atts = ' xlink:href="%s"' % entity_encode(url)
+    if rollover:
+        title_atts = ' xlink:title="%s"' % entity_encode(rollover)
+    if url or rollover:
+        return ('<a%s%s>' % (url_atts, title_atts)) + node + '</a>'
     return node
 
 def make_either_rect(item, rx, ry):
