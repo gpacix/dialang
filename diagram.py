@@ -163,7 +163,7 @@ def parse(ntokens):
         current_token = tokens[i]
         try:
             # special so far: center size ul ll ur lr color from to
-            if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr']:
+            if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr', 'tposition']:
                 r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
                 i += 3
             elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
@@ -352,6 +352,11 @@ def get_label_rotation(item):
         return item['trotate']
     return 0
 
+def get_label_position(item):
+    if 'tposition' in item:
+        return item['tposition']
+    return 0, 0
+
 def get_url(item):
     if 'url' in item:
         return item['url']
@@ -373,6 +378,7 @@ def get_text_class_str(item):
     return ''
 
 def get_text_width(s, maxwidth, hint=.95):
+    return context['font_average_width'] * len(s)
     return min(context['font_average_width'] * len(s), maxwidth*hint)
 
 def scale_points(points, w, h):
@@ -409,6 +415,9 @@ def id_encode(s):
 def make_label(item, text_width_adj=1.0, height_adj=1.0):
     label = get_label(item)
     textx, texty = get_center(item)
+    textdelta = get_label_position(item)
+    textx += textdelta[0]
+    texty += textdelta[1]
     center_adjust = height_adj * context['font_half_height']
     width, height = get_size(item)
     textwidth = get_text_width(label, width * text_width_adj)
