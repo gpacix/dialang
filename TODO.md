@@ -7,11 +7,10 @@
  __ figure out what to do with extra, unrecognized tokens: warn?  05/09/24 10:40:11 EDT
  __ label placement options, possibly as a separate label element 04/11/24 21:42:42 EDT
  __ multi-line text (\n) 04/11/24 21:42:43 EDT
- __ make label automatically pick up the class from its container  04/11/24 21:43:23 EDT
  __ make including source code optional  04/11/24 21:44:40 EDT
  __ let the user declare persistent class and text-class (may conflict with edges-first)  04/07/24 23:24:46 EDT
- __ replace "click" with URL in rollover text, or add title  04/07/24 23:42:45 EDT
  __ add an auto size, making the item just wide enough for its label
+ __ let labels extend outside their node's bounding box, or limit how compressed they can be 05/26/24 22:30:36 EDT
  __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
  __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
  __ add URL links to edges, (maybe can refer to these by ID?)  04/07/24 19:30:26 EDT
@@ -40,7 +39,6 @@
     we already intend to provide classes c0-c5, plus corresponding legible text classes
  __ multi-edges, like the T edges in t-edges.dgm  04/11/24 22:04:24 EDT
  __ routable edges: from n1 to n2 through "+20 -10   +40 -10" (relative to source, I guess) 05/26/24 11:16:21 EDT
- __ rotated text  04/11/24 22:04:24 EDT
  __ add simple macros: substitute a fixed string for a fixed token 05/25/24 21:26:55 EDT
  __ add parameterized macros: substitute a string with substitutions for a fixed token plus values 05/25/24 21:26:55 EDT
  __ add variables: replace fixed token with value, allow incrementing and decrementing (even, e.g., c2 -> c3) 05/25/24 21:26:55 EDT
@@ -51,6 +49,7 @@
  __ let the user define new shapes, maybe as macros; disallow recursion 04/07/24 18:58:29 EDT
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
  __ relative positioning with + or - before values; need to use +0 or -0 05/02/24 19:01:38 EDT
+ __ do not treat non-breaking space as a space 05/27/24 13:28:31 EDT
  __ generate a bunch of files for spec-by-example 05/26/24 11:21:41 EDT
  __ reverse-translate: take an SVG and do its best to generate dialang code 05/26/24 11:16:50 EDT
  __ annotate: specify an existing SVG (or PNG), then *add* elements to it (maybe "annotation" instead of "diagram"?) 05/26/24 11:17:27 EDT
@@ -82,9 +81,12 @@
  ++ add hexagon 04/07/24 17:17:36 EDT d. 04/30/24 21:31:29 EDT
  ++ escape any "--" in the source code: not permitted in comments  04/24/24 23:22:43 EDT d. 04/30/24 21:55:08 EDT
  ++ report errors, with line number and some context  04/24/24 22:16:29 EDT d. 05/09/24 11:23:16 EDT
+ ++ make label automatically pick up the class from its container  04/11/24 21:43:23 EDT  d. 05/25/24 21:38:30 EDT
  ++ make the text-class of a node's label default to the node's class  d. 05/25/24 21:38:30 EDT
  ++ add tail arrows to edges (for `arrow tail` or `arrow both`)  d. 05/25/24 22:54:20 EDT
  ++ fix the angle of arrowheads to match the line part of the edge  05/25/24 23:22:43 EDT
+ ++ rotated text  04/11/24 22:04:24 EDT  d. 05/26/24 16:48:57 EDT
+ ++ replace "click" with URL in rollover text? no: add title  04/07/24 23:42:45 EDT d. 05/26/24 21:01:20 EDT
 
 # ID stuff:
 
