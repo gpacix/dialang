@@ -19,7 +19,9 @@ RECT_TEMPLATE='<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s
 
 LINE_TEMPLATE='<line id="%s" class="edge %s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
-TEXT_TEMPLATE = '<text id="%s" class="text %s" transform="translate(%s,%s) rotate(%s) translate(0,%s)" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
+TEXT_TRANSFORM_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s) translate(0,%s)">'
+
+TEXT_TEMPLATE = '<text id="%s" class="text %s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
 CIRCLE_TEMPLATE = '<circle id="%s" class="node %s" cx="%s" cy="%s" r="%s" fill="%s" />'
 
@@ -413,22 +415,28 @@ def id_encode(s):
     return id
 
 def make_label(item, text_width_adj=1.0, height_adj=1.0):
-    label1 = get_label(item)
+    half_height = context['font_half_height']
+    lines = get_label(item).split('\\n')
     textx, texty = get_center(item)
+    # want: 1 -> 1 hh, 2 -> 2.5 hh, 3 -> 4 hh, etc
+    hheights = ((3 * len(lines) - 1)) / 2.0 # 2 half_heights per line, 1 in-between each
+    yoffset = hheights * half_height
     textdelta = get_label_position(item)
     textx += textdelta[0]
     texty += textdelta[1]
-    center_adjust = height_adj * context['font_half_height']
+    center_adjust = height_adj * half_height # TODO: figure out what to do with this with cloud, etc.
     width, height = get_size(item)
     rot = get_label_rotation(item)
-    r = ''
-    for label in label1.split('\\n'): # multi-line label; go one at a time:
+    r = TEXT_TRANSFORM_TEMPLATE % to_strings(textx, texty, rot, -yoffset) + '\n'
+    ypos = 2 * half_height # because this is the BOTTOM of the text
+    for label in lines: # multi-line label; go one at a time:
         textwidth = get_text_width(label, width * text_width_adj)
         # TODO: use this in the template: texty += context['font_half_height']
         r += TEXT_TEMPLATE % to_strings(get_id(item)+'-label', get_text_class_str(item),
-                                        textx, texty, rot, center_adjust, textwidth,
-                                        get_text_color(item), get_font_family(item), label)
-        texty += 3 * context['font_half_height']
+                                        ypos, textwidth,
+                                        get_text_color(item), get_font_family(item), label) + '\n'
+        ypos += 3 * half_height
+    r += '</g>\n'
     return r
 
 def wrap_with_url(node, item):
