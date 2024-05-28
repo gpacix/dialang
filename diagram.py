@@ -413,19 +413,23 @@ def id_encode(s):
     return id
 
 def make_label(item, text_width_adj=1.0, height_adj=1.0):
-    label = get_label(item)
+    label1 = get_label(item)
     textx, texty = get_center(item)
     textdelta = get_label_position(item)
     textx += textdelta[0]
     texty += textdelta[1]
     center_adjust = height_adj * context['font_half_height']
     width, height = get_size(item)
-    textwidth = get_text_width(label, width * text_width_adj)
     rot = get_label_rotation(item)
-    # TODO: use this in the template: texty += context['font_half_height']
-    return TEXT_TEMPLATE % to_strings(get_id(item)+'-label', get_text_class_str(item),
-                                      textx, texty, rot, center_adjust, textwidth,
-                                      get_text_color(item), get_font_family(item), label)
+    r = ''
+    for label in label1.split('\\n'): # multi-line label; go one at a time:
+        textwidth = get_text_width(label, width * text_width_adj)
+        # TODO: use this in the template: texty += context['font_half_height']
+        r += TEXT_TEMPLATE % to_strings(get_id(item)+'-label', get_text_class_str(item),
+                                        textx, texty, rot, center_adjust, textwidth,
+                                        get_text_color(item), get_font_family(item), label)
+        texty += 3 * context['font_half_height']
+    return r
 
 def wrap_with_url(node, item):
     url_atts = ""
