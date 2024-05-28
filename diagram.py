@@ -15,7 +15,8 @@ STYLESHEET_TEMPLATE='<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet"
 
 STYLE_TEMPLATE='<style>\n%s</style>\n'
 
-RECT_TEMPLATE='<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" fill="%s" />'
+RECT_TEMPLATE = '<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" />'
+RECT_TEMPLATE_C='<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" style="fill:%s" />'
 
 LINE_TEMPLATE='<line id="%s" class="edge %s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
@@ -81,7 +82,7 @@ parallelogram = Shape((100, 60), "1px", '''M 60,60 h -60 l 30 -60 h 60 l -30 60'
 
 hexagon = Shape((100, 60), "1px", '''M 20,60 l -20 -30 l 20 -30 h 60 l 20 30 l -20 30 h -60''')
 
-context = { 'color': '#C0C0C0', 'text_color': 'black', 'edge_width': 3,
+context = { 'color': 'none', 'text_color': 'black', 'edge_width': 3,
             'diagram_width': 1000, 'diagram_height': 750,
             'font_half_height': 6, 'font_average_width': 10, 'font_family': 'helvetica,arial,sans-serif',
             'css_href': '', 'style': 'default'}
@@ -457,8 +458,13 @@ def make_either_rect(item, rx, ry):
     x, y = get_ul(item)
     width, height = get_size(item)
     css_classes = get_class_str(item)
-    node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, get_color(item))
-            + '\n' + make_label(item))
+    color = get_color(item)
+    if color and color != 'none':
+        node = (RECT_TEMPLATE_C % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, color)
+                + '\n' + make_label(item))
+    else:
+        node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry)
+                + '\n' + make_label(item))
     return wrap_with_url(node, item)
 
 def make_rect(r):
