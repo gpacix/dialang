@@ -679,8 +679,13 @@ def make_edge(edge):
     return result
 
 def make_diagram(diagram):
-    context['diagram_width']  = diagram['width']
-    context['diagram_height'] = diagram['height']
+    if 'width' in diagram and 'height' in diagram:
+        context['diagram_width']  = diagram['width']
+        context['diagram_height'] = diagram['height']
+    else:
+        size = diagram['size']
+        context['diagram_width']  = size[0]
+        context['diagram_height'] = size[1]
     if 'stylesheet' in diagram:
         context['css_href'] = diagram['stylesheet']
     if 'style' in diagram:

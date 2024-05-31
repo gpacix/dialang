@@ -9,7 +9,7 @@
  __ multi-line text (\n) 04/11/24 21:42:43 EDT
  __ make including source code optional  04/11/24 21:44:40 EDT
  __ let the user declare persistent class and text-class (may conflict with edges-first)  04/07/24 23:24:46 EDT
- __ add an auto size, making the item just wide enough for its label
+ __ add an auto size for nodes, making the item just wide enough for its label
  __ let labels extend outside their node's bounding box, or limit how compressed they can be 05/26/24 22:30:36 EDT
  __ add multi-line labels, or wrap them, or both 04/07/24 17:55:23 EDT
  __ add simple things from markdown to text: bold, italic  04/07/24 19:30:32 EDT
@@ -50,6 +50,7 @@
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
  __ relative positioning with + or - before values; need to use +0 or -0 05/02/24 19:01:38 EDT
  __ do not treat non-breaking space as a space 05/27/24 13:28:31 EDT
+ __ add auto as a size for diagram, calcluate based on node bounding boxes 05/31/24 19:39:37 EDT
  __ generate a bunch of files for spec-by-example 05/26/24 11:21:41 EDT
  __ reverse-translate: take an SVG and do its best to generate dialang code 05/26/24 11:16:50 EDT
  __ annotate: specify an existing SVG (or PNG), then *add* elements to it (maybe "annotation" instead of "diagram"?) 05/26/24 11:17:27 EDT
@@ -87,6 +88,7 @@
  ++ fix the angle of arrowheads to match the line part of the edge  05/25/24 23:22:43 EDT
  ++ rotated text  04/11/24 22:04:24 EDT  d. 05/26/24 16:48:57 EDT
  ++ replace "click" with URL in rollover text? no: add title  04/07/24 23:42:45 EDT d. 05/26/24 21:01:20 EDT
+ ++ add size attribute for diagram, instead of just width and height d. 05/31/24 19:49:24 EDT
 
 # ID stuff:
 
