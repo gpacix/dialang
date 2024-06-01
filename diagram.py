@@ -166,7 +166,15 @@ def parse(ntokens):
         current_token = tokens[i]
         try:
             # special so far: center size ul ll ur lr color from to
-            if current_token in ['center', 'size', 'ul', 'll', 'ur', 'lr', 'tposition']:
+            if current_token in ['size']:
+                sizex = tokens[i+1]
+                if sizex.lower() == 'auto':
+                    r[current_token] = ('auto', 'auto')
+                    i += 2
+                else:
+                    r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
+                    i += 3
+            elif current_token in ['center', 'ul', 'll', 'ur', 'lr', 'tposition']:
                 r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
                 i += 3
             elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
@@ -708,6 +716,17 @@ def get_angle(x1, y1, x2, y2):
         return math.copysign(90, y2 - y1)
     return math.atan2(y2 - y1, x2 - x1) * 180 / math.pi
 
+def calculate_diagram_size(parsed):
+    xmax, ymax = 0, 0
+    for p in parsed:
+        if p[1]['name'] not in ['diagram', 'edge']:
+            lr = get_lr(p[1])
+            if lr[0] > xmax:
+                xmax = lr[0]
+            if lr[1] > ymax:
+                ymax = lr[1]
+    return xmax, ymax
+
 def update_context(args):
     errors = []
     for a in args:
@@ -752,7 +771,11 @@ def main(args):
     svgobjects = [make_object(thing) for thing in parsed]
     svgobjects = [ob for ob in svgobjects if ob]
     # either it has an external stylesheet, or it specified a style (if both, stylesheet wins):
-    print(SVG_TEMPLATE % (context['diagram_width'], context['diagram_height'], dash_encode('\n'.join(lines0)),
+    if 'auto' in [context['diagram_width'], context['diagram_height']]:
+        size = calculate_diagram_size(parsed)
+    else:
+        size = context['diagram_width'], context['diagram_height']
+    print(SVG_TEMPLATE % (size[0], size[1], dash_encode('\n'.join(lines0)),
                           get_style_fragment(), '\n'.join(svgobjects)))
 
 if __name__ == '__main__':
