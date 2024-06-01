@@ -15,8 +15,7 @@ STYLESHEET_TEMPLATE='<link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet"
 
 STYLE_TEMPLATE='<style>\n%s</style>\n'
 
-RECT_TEMPLATE = '<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" />'
-RECT_TEMPLATE_C='<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s" style="fill:%s" />'
+RECT_TEMPLATE = '<rect id="%s" class="node %s" x="%s" y="%s" width="%s" height="%s" rx="%s" ry="%s"%s />'
 
 LINE_TEMPLATE='<line id="%s" class="edge %s" x1="%s" y1="%s" x2="%s" y2="%s" stroke="%s" stroke-width="%s" />'
 
@@ -24,11 +23,13 @@ TEXT_TRANSFORM_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s) translate(0
 
 TEXT_TEMPLATE = '<text id="%s" class="text %s" y="%s" textLength="%s" fill="%s" font-family="%s" text-anchor="middle" lengthAdjust="spacingAndGlyphs">%s</text>'
 
-CIRCLE_TEMPLATE = '<circle id="%s" class="node %s" cx="%s" cy="%s" r="%s" fill="%s" />'
+CIRCLE_TEMPLATE = '<circle id="%s" class="node %s" cx="%s" cy="%s" r="%s"%s />'
 
 DIAMOND_TEMPLATE = '<g transform="translate(%s,%s), scale(%s,%s)"><polygon id="%s" class="node %s" fill="%s" points="-0.5 0  0 0.5  0.5 0  0 -0.5" /></g>'
 
 POLYGON_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s)"><polygon id="%s" class="%s" points="%s" fill="%s" /></g>'
+
+COLOR_OVERRIDE_TEMPLATE=' style="fill:%s"'
 
 DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
 
@@ -344,6 +345,11 @@ def get_text_color(r):
         return r['text-color']
     return get_color_for_type('text')
 
+def get_color_override(color):
+    if color and color != 'none':
+        return COLOR_OVERRIDE_TEMPLATE % color
+    return ''
+
 def get_font_family(r):
     if 'font-family' in r:
         return r['font-family']
@@ -466,13 +472,9 @@ def make_either_rect(item, rx, ry):
     x, y = get_ul(item)
     width, height = get_size(item)
     css_classes = get_class_str(item)
-    color = get_color(item)
-    if color and color != 'none':
-        node = (RECT_TEMPLATE_C % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, color)
-                + '\n' + make_label(item))
-    else:
-        node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry)
-                + '\n' + make_label(item))
+    color_override = get_color_override(get_color(item))
+    node = (RECT_TEMPLATE % to_strings(get_id(item), css_classes, x, y, width, height, rx, ry, color_override)
+            + '\n' + make_label(item))
     return wrap_with_url(node, item)
 
 def make_rect(r):
@@ -493,7 +495,8 @@ def make_circle(item):
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    node = (CIRCLE_TEMPLATE % to_strings(get_id(item), css_classes, x, y, r, get_color(item))
+    color_override = get_color_override(get_color(item))
+    node = (CIRCLE_TEMPLATE % to_strings(get_id(item), css_classes, x, y, r, color_override)
             + '\n' + make_label(item))
     return wrap_with_url(node, item)
 
@@ -504,12 +507,13 @@ def make_diamond(item):
     texty = y + context['font_half_height']
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
+    color_override = get_color_override(get_color(item))
     # TODO: why do we need to divide by 4.0? What's going on?
     # part was the stroke-width; why are the diamonds all stroke-colored?
     # diamond_points = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
     points_string = scale_points(DIAMOND_POINTS, width, height)
     rotation = 0
-    node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), 'node ' + css_classes, points_string, get_color(item))
+    node = (POLYGON_TEMPLATE % to_strings(x, y, rotation, get_id(item), 'node ' + css_classes, points_string, color_override)
             + '\n' + make_label(item, .6))
     return wrap_with_url(node, item)
 
@@ -521,8 +525,9 @@ def make_cloud(item):
     #xscale, yscale = width / 118, height / 80
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
+    color_override = get_color_override(get_color(item))
 #    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
-    node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", get_color(item))
+    node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", color_override)
             + '\n' + make_label(item, .6, shape.height_adj))
     return wrap_with_url(node, item)
 
@@ -535,8 +540,9 @@ def make_cylinder(item):
     texty = y + 1.5*context['font_half_height'] ## TODO: adjust this
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
+    color_override = get_color_override(get_color(item))
 #    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
-    node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
+    node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", color_override)
             + '\n' + make_label(item, .6, shape.height_adj))
     return wrap_with_url(node, item)
 
@@ -547,7 +553,8 @@ def make_shape(item, shape):
     #xscale, yscale = width / 100, height / 60
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", get_color(item))
+    color_override = get_color_override(get_color(item))
+    node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", color_override)
             + '\n' + make_label(item, .6, shape.height_adj))
     return wrap_with_url(node, item)
 
