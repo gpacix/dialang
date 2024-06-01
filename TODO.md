@@ -3,6 +3,7 @@
  __ add some more shapes  04/07/24 17:17:36 EDT
     __ polygon
     __ path
+    __ flag: >__>
  __ plow through on common errors  04/24/24 22:16:29 EDT
  __ figure out what to do with extra, unrecognized tokens: warn?  05/09/24 10:40:11 EDT
  __ label placement options, possibly as a separate label element 04/11/24 21:42:42 EDT
@@ -32,6 +33,7 @@
  __ what about optional IDs? could be easy with the above : syntax
  __ what about Smalltalk-like 'argname: val' syntax?
  __ add rollover effects: start with just changing color (or leave this to CSS?)  04/07/24 21:47:39 EDT
+ __ make user color override style for edges, too  05/31/24 20:50:33 EDT
  __ simple automatic layout of shapes  04/07/24 21:44:03 EDT
  __ indicate that some items are contained inside other ones  04/07/24 21:42:41 EDT
  __ describe links with A -- B <- C -> D syntax; maybe support ---, -->, etc. too  04/07/24 21:43:28 EDT
@@ -50,7 +52,6 @@
  __ allow ll, ur, lr as ways to position a node  04/24/24 21:29:32 EDT
  __ relative positioning with + or - before values; need to use +0 or -0 05/02/24 19:01:38 EDT
  __ do not treat non-breaking space as a space 05/27/24 13:28:31 EDT
- __ add auto as a size for diagram, calcluate based on node bounding boxes 05/31/24 19:39:37 EDT
  __ generate a bunch of files for spec-by-example 05/26/24 11:21:41 EDT
  __ reverse-translate: take an SVG and do its best to generate dialang code 05/26/24 11:16:50 EDT
  __ annotate: specify an existing SVG (or PNG), then *add* elements to it (maybe "annotation" instead of "diagram"?) 05/26/24 11:17:27 EDT
@@ -89,6 +90,8 @@
  ++ rotated text  04/11/24 22:04:24 EDT  d. 05/26/24 16:48:57 EDT
  ++ replace "click" with URL in rollover text? no: add title  04/07/24 23:42:45 EDT d. 05/26/24 21:01:20 EDT
  ++ add size attribute for diagram, instead of just width and height d. 05/31/24 19:49:24 EDT
+ ++ add auto as a size for diagram, calcluate based on node bounding boxes 05/31/24 19:39:37 EDT d. 05/31/24 20:42:33 EDT
+
 
 # ID stuff:
 

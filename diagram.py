@@ -48,7 +48,7 @@ class Shape:
         self.height_adj = height_adj # number of font-half-heights to move the label down
 
     PATH_TEMPLATE = '''<g transform="translate(%s,%s), scale(%s,%s)"><g transform="translate(%s,%s)">
-<path id="%s" class="node %s" fill="%s" stroke="%s" style="stroke-width:%s"
+<path id="%s" class="node %s" style="fill:%s;stroke:%s;stroke-width:%s"
        d="%s" /></g></g>'''
 
     def emit(self, x, y, width, height, id, additional_class, fill, stroke):
@@ -525,9 +525,9 @@ def make_cloud(item):
     #xscale, yscale = width / 118, height / 80
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    color_override = get_color_override(get_color(item))
+    color = get_color(item)
 #    node = (CLOUD_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "none", get_color(item))
-    node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", color_override)
+    node = (cloud.emit(x, y, width, height, get_id(item), css_classes, "none", color)
             + '\n' + make_label(item, .6, shape.height_adj))
     return wrap_with_url(node, item)
 
@@ -540,9 +540,9 @@ def make_cylinder(item):
     texty = y + 1.5*context['font_half_height'] ## TODO: adjust this
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    color_override = get_color_override(get_color(item))
+    color = get_color(item)
 #    node = (CYLINDER_TEMPLATE % to_strings(x, y, xscale, yscale, get_id(item), css_classes, "white", get_color(item))
-    node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", color_override)
+    node = (cylinder.emit(x, y, width, height, get_id(item), css_classes, "white", color)
             + '\n' + make_label(item, .6, shape.height_adj))
     return wrap_with_url(node, item)
 
@@ -553,8 +553,8 @@ def make_shape(item, shape):
     #xscale, yscale = width / 100, height / 60
     css_classes = get_class_str(item)
     text_css_classes = get_text_class_str(item)
-    color_override = get_color_override(get_color(item))
-    node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", color_override)
+    color = get_color(item)
+    node = (shape.emit(x, y, width, height, get_id(item), css_classes, "white", color)
             + '\n' + make_label(item, .6, shape.height_adj))
     return wrap_with_url(node, item)
 
