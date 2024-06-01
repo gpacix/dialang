@@ -31,6 +31,8 @@ POLYGON_TEMPLATE = '<g transform="translate(%s,%s) rotate(%s)"><polygon id="%s" 
 
 COLOR_OVERRIDE_TEMPLATE=' style="fill:%s"'
 
+IMAGE_TEMPLATE = '<image href="%s"%s />'
+
 DIAMOND_POINTS = [-0.5, 0,  0, 0.5,  0.5, 0,  0, -0.5]
 
 ARROWHEAD_POINTS = [ -1, 0,  -1, -0.5,  0, 0,  -1, 0.5 ]
@@ -38,7 +40,7 @@ ARROWHEAD_POINTS = [ -1, 0,  -1, -0.5,  0, 0,  -1, 0.5 ]
 PARALLELOGRAM_POINTS = [0.5, -0.5,  0.3, 0.5,  -0.5, 0.5,  -0.3, -0.5]
 
 KINDS = [ 'color', 'edge', 'rect', 'rrect', 'oval', 'circle', 'diamond',
-          'cloud', 'cylinder', 'para', 'hex', 'diagram' ]
+          'cloud', 'cylinder', 'para', 'hex', 'image', 'diagram' ]
 
 class Shape:
     def __init__(self, size, stroke_width, path, height_adj=1):
@@ -178,7 +180,7 @@ def parse(ntokens):
             elif current_token in ['center', 'ul', 'll', 'ur', 'lr', 'tposition']:
                 r[current_token] = (to_number(tokens[i+1]), to_number(tokens[i+2]))
                 i += 3
-            elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height',
+            elif current_token in ['color', 'text-color', 'from', 'to', 'width', 'height', 'href',
                                    'url', 'rollover', 'stylesheet', 'style', 'class', 'text-class', 'arrow']:
                 r[current_token] = tokens[i+1]
                 i += 2
@@ -197,7 +199,7 @@ def parse(ntokens):
             print(lines0[num-1], file=sys.stderr)
             sys.exit(7)
 
-    if r['name'] not in ['diagram', 'edge']:
+    if r['name'] not in ['diagram', 'edge', 'image']:
         try:
             calculate_dimensions(r)
         except TypeError:
@@ -235,6 +237,8 @@ def make_object(nparsed):
             return make_shape(parsed, hexagon)
         elif kind == 'diagram':
             return make_diagram(parsed)
+        elif kind == 'image':
+            return make_image(parsed)
         else:
             return None
     except KeyError as ke:
@@ -693,6 +697,19 @@ def make_edge(edge):
         result += '\n' + make_arrowhead(edge, xe, ye, xb, yb, tx, ty, css_classes, '-ta')
     return result
 
+def make_image(item):
+    href = ''
+    if 'href' in item:
+        href = item['href']
+    if 'size' in item:
+        width, height = item['size']
+        dims = ' width="%s" height="%s"' % (width, height)
+    else:
+        dims = ' width="100%"'
+    node = IMAGE_TEMPLATE % (href, dims)
+    ## can it have a label? or no?
+    return wrap_with_url(node, item)
+
 def make_diagram(diagram):
     if 'width' in diagram and 'height' in diagram:
         context['diagram_width']  = diagram['width']
@@ -726,7 +743,7 @@ def get_angle(x1, y1, x2, y2):
 def calculate_diagram_size(parsed):
     xmax, ymax = 0, 0
     for p in parsed:
-        if p[1]['name'] not in ['diagram', 'edge']:
+        if p[1]['name'] not in ['diagram', 'edge', 'image']:
             lr = get_lr(p[1])
             if lr[0] > xmax:
                 xmax = lr[0]
