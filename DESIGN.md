@@ -52,3 +52,18 @@ node-color: color to use for nodes INOS
 OK, let's make that diagram above.
 
 --04/07/24 12:44:54 EDT
+
+08/17/24 18:49:23 EDT --
+
+I'm going to do layout as a separate tool; I did some work last week on it,
+and it seems pretty nice to use:
+  3154 Aug 11 20:06 layouter.py
+  
+I'll add that to the repo, then fix it:
+It's pretty clear we need 3 pairs of numbers: object size, cell size, and grid's offset.
+Right now, I have object size, padding, but no grid offset.
+I may want to do things in terms of object centers, but ul is fine to start.
+
+Oh, and earlier today I hosed my magit setup. Argh.
+
+--08/17/24 18:52:07 EDT
