@@ -67,3 +67,38 @@ I may want to do things in terms of object centers, but ul is fine to start.
 Oh, and earlier today I hosed my magit setup. Argh.
 
 --08/17/24 18:52:07 EDT
+
+08/17/24 19:16:28 EDT --
+
+Should the grid layout just keep repeating forever?
+In other words, start over from the beginning line?
+That could be useful, and probably not very confusing.
+
+Then you could do things like:
+
+diagram LayoutInputGrid size auto
+layout grid 160 160 80 80
+012
+endlayout
+rect r0 class c0
+rect r1 class c1
+rect r2 class c2
+rect r3 class c3
+rect r4 class c4
+rect r5 class c5
+
+...and get two rows of three, and if you add r6 - r8,
+you'd get three rows of three, etc.
+
+Also I had an idea last week that it should *not* add its size to
+a line that already has a size (tough to figure out, though, since ul and lr
+together imply a size).  That way, you could easily override the default
+size for a couple items.
+--08/17/24 19:18:12 EDT
+
+Another idea is to have the ability to assign different widths to some columns,
+and different heights to some rows, though that starts to sound unduly complicated.
+Right now I think if you want a wider first column, you can just override the widths
+or something... I'll give it a try.
+-- 08/17/24 19:20:48 EDT
+

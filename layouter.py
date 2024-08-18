@@ -35,14 +35,17 @@ def to_strings(*args):
 class GridLayout:
     def __init__(self, lines):
         debug('%s' % lines) ##DEBUG
-        line = lines[0]
+        orig_first_line = lines[0]
+        first_line = orig_first_line.strip()
         lines = lines[1:]
-        if not line.strip().startswith('layout grid'):
-            err('error: unknown layout: %s' % line)
+        if not first_line.startswith('layout grid'):
+            err('error: unknown layout: %s' % orig_first_line)
             return None
-        self.dimensions = list(map(to_number, line[11:].strip().split()))
-        self.width, self.height, self.xspace, self.yspace = self.dimensions
+        self.dimensions = self.get_dimensions(first_line)
         debug("%s" % self.dimensions) ##DEBUG
+        if self.dimensions is None:
+            return None
+        self.xpitch, self.ypitch, self.xsize, self.ysize, self.xoffset, self.yoffset = self.dimensions
         d = {}
         row = 0
         lines = [ line for line in lines if not line or line[0] != '#' ]
@@ -56,13 +59,30 @@ class GridLayout:
         self.positions = [d[k] for k in sorted(d.keys())]
         debug(self.positions) ##DEBUG
 
+    def get_dimensions(self, first_line):
+        numbers = list(map(to_number, first_line[11:].strip().split()))
+        debug('numbers:', numbers)
+        # x/y pairs: grid pitch, element size, grid offset
+        # if element size is not specified, use entire cell:
+        if len(numbers) == 2:
+            numbers = numbers * 2
+        # if grid offset is not specified, use zeroes:
+        if len(numbers) == 4:
+            numbers = numbers + [0, 0]
+            debug('added 0,0 so numbers is now', numbers)
+        if len(numbers) != 6:
+            debug('numbers is', numbers)
+            err('error: grid layout takes 2, 4, or 6 numbers: %s' % first_line)
+            return None
+        return list(numbers)
+
     def transform(self, line):
         # TODO: error message if no remaining positions
         pos, self.positions = self.positions[0], self.positions[1:]
         # figure out position, size
-        ulx = (self.width  + self.xspace) * pos[0] + self.xspace
-        uly = (self.height + self.yspace) * pos[1] + self.yspace
-        return "%s ul %s %s size %s %s" % to_strings(line, ulx, uly, self.width, self.height)
+        cx = self.xpitch * (pos[0] + 0.5) + self.xoffset
+        cy = self.ypitch * (pos[1] + 0.5) + self.yoffset
+        return "%s center %s %s size %s %s" % to_strings(line, cx, cy, self.xsize, self.ysize)
 
     def has_more(self):
         return len(self.positions) > 0
