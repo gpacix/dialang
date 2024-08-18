@@ -82,7 +82,12 @@ class GridLayout:
         # figure out position, size
         cx = self.xpitch * (pos[0] + 0.5) + self.xoffset
         cy = self.ypitch * (pos[1] + 0.5) + self.yoffset
-        return "%s center %s %s size %s %s" % to_strings(line, cx, cy, self.xsize, self.ysize)
+        if line.lstrip().startswith('circle '):
+            radius = min(self.xsize, self.ysize) / 2.0
+            sizeclause = "radius %s" % to_string(radius)
+        else:
+            sizeclause = "size %s %s" % (self.xsize, self.ysize)
+        return "%s center %s %s %s" % to_strings(line, cx, cy, sizeclause)
 
     def has_more(self):
         return len(self.positions) > 0
