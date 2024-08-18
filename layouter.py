@@ -8,12 +8,12 @@ def open_file(args):
     return sys.stdin
 
 def err(*args):
-    print(*args, file=sys.stderr)    
+    print(*args, file=sys.stderr)
 
 DEBUG=False
 def debug(*args):
     if DEBUG:
-        print('DEBUG:', *args)
+        print('DEBUG:', *args, file=sys.stderr)
 
 def to_number(s):
     if s.isnumeric():
@@ -90,7 +90,13 @@ def apply_layout(line, layout):
     return layout.transform(line)
 
 def main(args):
+    global DEBUG
     filenameargs = [a for a in args if '=' not in a]
+    settings = [a for a in args if '=' in a]
+    for s in settings:
+        if s.upper() == 'DEBUG=1':
+            DEBUG = True
+
     inlines = open_file(filenameargs + ['-']).readlines()
     inlines = [line.rstrip('\r\n') for line in inlines]
     layout = None
