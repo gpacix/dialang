@@ -86,7 +86,7 @@ class GridLayout:
             radius = min(self.xsize, self.ysize) / 2.0
             sizeclause = "radius %s" % to_string(radius)
         else:
-            sizeclause = "size %s %s" % (self.xsize, self.ysize)
+            sizeclause = "size %s %s" % to_strings(self.xsize, self.ysize)
         return "%s center %s %s %s" % to_strings(line, cx, cy, sizeclause)
 
     def has_more(self):
