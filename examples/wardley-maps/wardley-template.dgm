@@ -1,0 +1,55 @@
+diagram "Wardley Map" width 1000 height 600 style clean
+# Use this as a template for creating a Wardley map in dialang:
+circle origin " " center 40 570 radius 2
+circle evolution " " center 990 570 radius 2
+circle value " " center 40 10 radius 2
+rect evolabel "Evolution" center 940 590 size 100 20 class invisible text-class c1
+rect vislabel "Visible" trotate -90 center 20 70 size 100 20 class invisible text-class c3
+rect invlabel "Invisible" trotate -90 center 20 520 size 100 20 class invisible text-class c3
+rect vallabel "Value Chain" trotate -90 center 20 300 size 100 20 class invisible text-class c1
+edge x-axis from origin to evolution arrow head
+edge y-axis from origin to value arrow head
+# Genesis  Custom Built  Product  Commodity
+rect genlabel "Genesis" center 80 590 size 100 20 class invisible text-class c3
+rect cuslabel "Custom Built" center 260 590 size 100 20 class invisible text-class c3
+rect prdlabel "Product" center 450 590 size 100 20 class invisible text-class c3
+rect prdlabel "Commodity" center 780 590 size 100 20 class invisible text-class c3
+# borders:
+circle b1t " " center 200 10 radius 3 class invisible
+circle b1b " " center 200 790 radius 3 class invisible
+edge border1 from b1t to b1b class subtle z -2
+circle b2t " " center 400 10 radius 3 class invisible
+circle b2b " " center 400 790 radius 3 class invisible
+edge border2 from b2t to b2b class subtle z -2
+circle b3t " " center 720 10 radius 3 class invisible
+circle b3b " " center 720 790 radius 3 class invisible
+edge border3 from b3t to b3b class subtle z -2
+# customer:
+rect customer "Customer" center 360 25 size 100 20 class c6
+# Everything above this line remains the same.
+
+# dots:
+circle genesis " " center 100 310 radius 7 class outline
+circle custom " " center 310 80 radius 7 class outline
+circle product " " center 560 150 radius 7 class outline
+circle commodity " " center 800 530 radius 7 class outline
+# labels:
+rect lgenesis "Genesis" class invisible text-class c3 size 100 30 center 120 330
+rect lcustom1 "Thing in" class invisible text-class c3 size 100 30 center 340 105
+rect lcustom2 "Custom" class invisible text-class c3 size 100 30 center 340 120
+rect lproduct "Product" class invisible text-class c3 size 100 30 center 570 125
+rect lcommodity "Commodity" class invisible text-class c3 size 100 30 center 840 505
+
+# connections:
+edge e2 from customer to custom class thin
+edge e4 from customer to product class thin
+edge e5 from custom to genesis class thin
+edge e6 from custom to product class thin
+edge e7 from product to commodity class thin
+#edge e8 from web to crm class thin
+#edge e9 from web to platform class thin
+#edge e10 from crm to compute class thin
+#edge e11 from platform to compute class thin
+#edge e12 from compute to datacenter class thin
+#edge e13 from compute to power class thin
+#edge e14 from datacenter to power class thin

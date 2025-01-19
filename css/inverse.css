@@ -1,0 +1,43 @@
+/* Based on clean.css, with all colors inverted */
+svg { background-color: #222222; }
+
+.important { filter: saturation(150%); }
+.unimportant { filter: saturation(50%); }
+.edge.subtle { fill: #444444; stroke: #444444; stroke-dasharray: 3 3; }
+
+.node { opacity: 1.0; fill: #D86D3D; stroke: #D86D3D; stroke-width: 0; }
+
+.text { fill: #FFAA7D; stroke: #FFAA7DFF; font-family: skia,helvetica,sans-serif; }
+
+.edge { stroke-width: 3; fill: #FFAA7DFF; stroke: #FFAA7DFF; }
+.arrowhead { fill: #FFAA7DFF; stroke: #FFAA7DFF; }
+
+.edge.thin { stroke-width: 1; }
+.edge.thick { stroke-width: 5; }
+.edge.dotted { stroke-dasharray: 3 3; }
+.edge.dashed { stroke-dasharray: 8 4; }
+
+.outline { fill: black; stroke: white; stroke-width: 2.5; }
+
+.c0 { fill: white; stroke: white; }
+.c1 { fill: #FFAA7DFF; stroke: #FFAA7DFF; }
+.c2 { fill: #D86D3D; stroke: #D86D3D; }
+.c3 { fill: #7E2F19; stroke: #7E2F19; }
+.c4 { fill: #332086; stroke: #332086; }
+.c5 { fill: #0960B9; stroke: #0960B9; }
+.c6 { fill: black; stroke: black; }
+
+.text.c0 { fill: black; stroke: black; }
+.text.c1 { fill: #6640FF; stroke: #6640FF; }
+.text.c2 { fill: black; stroke: black; }
+.text.c3 { fill: #FFAA7DFF; stroke: #FFAA7DFF; }
+.text.c4 { fill: #FFAA7DFF; stroke: #FFAA7DFF; }
+.text.c5 { fill: white; stroke: white; }
+.text.c6 { fill: white; stroke: white; }
+
+.node:hover { filter: brightness(150%); }
+.edge:hover { filter: brightness(150%); stroke-width: 7; }
+.arrowhead:hover { filter: brightness(150%); stroke-width: 7; }
+.text:hover { filter: brightness(200%); }
+.nohover:hover { filter: brightness(100%); }
+.invisible { fill: none; stroke: none; }

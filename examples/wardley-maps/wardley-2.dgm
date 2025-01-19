@@ -1,0 +1,66 @@
+diagram "Wardley Map" width 1000 height 600 style inverse
+# Try creating a Wardley map in dialang:
+circle origin " " center 40 570 radius 2
+circle evolution " " center 990 570 radius 2
+circle value " " center 40 10 radius 2
+rect evolabel "Evolution" center 940 590 size 100 20 class invisible text-class c1
+rect vislabel "Visible" trotate -90 center 20 70 size 100 20 class invisible text-class c3
+rect invlabel "Invisible" trotate -90 center 20 520 size 100 20 class invisible text-class c3
+rect vallabel "Value Chain" trotate -90 center 20 300 size 100 20 class invisible text-class c1
+edge x-axis from origin to evolution arrow head
+edge y-axis from origin to value arrow head
+# Genesis  Custom Built  Product  Commodity
+rect genlabel "Genesis" center 80 590 size 100 20 class invisible text-class c3
+rect cuslabel "Custom Built" center 260 590 size 100 20 class invisible text-class c3
+rect prdlabel "Product" center 450 590 size 100 20 class invisible text-class c3
+rect prdlabel "Commodity" center 780 590 size 100 20 class invisible text-class c3
+# customer:
+rect customer "Customer" center 360 25 size 100 20 class c6
+# dots:
+circle oim " " center 260 50  radius 7 class outline
+circle ops " " center 310 100 radius 7 class outline
+circle print " " center 560 100 radius 7 class outline
+circle web " " center 595 150 radius 7 class outline
+circle crm " " center 630 200 radius 7 class outline
+circle platform " " center 510 300 radius 7 class outline
+circle compute " " center 650 450 radius 7 class outline
+circle datacenter " " center 535 500 radius 7 class outline
+circle power " " center 800 530 radius 7 class outline
+# labels:
+rect loim1 "Online Image" class invisible text-class c3 size 100 30 center 210 70
+rect loim2 "Manipulation" class invisible text-class c3 size 100 30 center 210 90
+rect lops1 "Online Photo" class invisible text-class c3 size 100 30 center 330 120
+rect lops2 "Storage" class invisible text-class c3 size 100 30 center 330 140
+rect lprint "Print" class invisible text-class c3 size 100 30 center 565 75
+rect lweb "Web Site" class invisible text-class c3 size 100 30 center 645 130
+rect lcrm "CRM" class invisible text-class c3 size 100 30 center 660 180
+rect lplatform "Platform" class invisible text-class c3 size 100 30 center 480 320
+rect lcompute "Compute" class invisible text-class c3 size 100 30 center 640 480
+rect ldatacenter "Data Centre" class invisible text-class c3 size 100 30 center 525 520
+rect lpower "Power" class invisible text-class c3 size 100 30 center 820 505
+# borders:
+circle b1t " " center 200 10 radius 3 class invisible
+circle b1b " " center 200 790 radius 3 class invisible
+edge border1 from b1t to b1b class subtle z -2
+circle b2t " " center 400 10 radius 3 class invisible
+circle b2b " " center 400 790 radius 3 class invisible
+edge border2 from b2t to b2b class subtle z -2
+circle b3t " " center 720 10 radius 3 class invisible
+circle b3b " " center 720 790 radius 3 class invisible
+edge border3 from b3t to b3b class subtle z -2
+
+# connections:
+edge e1 from customer to oim class thin
+edge e2 from customer to ops class thin
+edge e3 from oim to ops class thin
+edge e4 from customer to print class thin
+edge e5 from customer to web class thin
+edge e6 from ops to web class thin
+edge e7 from print to web class thin
+edge e8 from web to crm class thin
+edge e9 from web to platform class thin
+edge e10 from crm to compute class thin
+edge e11 from platform to compute class thin
+edge e12 from compute to datacenter class thin
+edge e13 from compute to power class thin
+edge e14 from datacenter to power class thin
